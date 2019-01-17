@@ -1,4 +1,4 @@
-Casterlith DataMapper ORM v1.0 [author](https://github.com/merry-goblin)
+Casterlith DataMapper ORM v1.0
 ========================
 
 ### Purpose
@@ -73,23 +73,27 @@ var_dump($tracks);
 
 ### Methods available
 
-** Monolith\Casterlith\Casterlith **
+#### Monolith\Casterlith\Casterlith
 
-getComposer(className) : returns a specific composer instance
-getQueryBuilder() : returns a new DBAl query builder
+**getComposer(className) :**                       returns a specific composer instance
+**getQueryBuilder() :**                            returns a new DBAl query builder
 
-** Monolith\Casterlith\Composer\AbstractComposer **
+#### Monolith\Casterlith\Composer\AbstractComposer
 
-select(alias1, [alias2], [alias3], ...) :      alias of table to cast. reset selection
-addSelect(alias1, [alias2], [alias3], ...) :   alias of table to cast. add to current selection
-join(fromAlias, toAlias, relationName) :       alias of innerJoin
-innerJoin(fromAlias, toAlias, relationName) :  apply inner join between fromAlias' table and toAlias' table with relationName's condition
-leftJoin(fromAlias, toAlias, relationName) :   apply left join between fromAlias' table and toAlias' table with relationName's condition
-where(condition) :                             apply condition in query. to apply an or condition expressions of DBAL query builder must be used. reset selection
-andWhere(condition) :                          apply condition in query. to apply an or condition expressions of DBAL query builder must be used. add to current conditions
-setParameter(key, value) :                     parameters to send safely
-order(sort, order) :                           order query. reset order
-addOrder(sort, order) :                        order query. add to current order
-limit(first, max) :                            be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according the conditions request. to use only if needed because a second sql request is sent 
-first() :                                      returns one entity. it won't optimize your sql request
-all() :                                        returns an array of entities
+**select(alias1, [alias2], [alias3], ...) :**      alias of table to cast. reset selection
+**addSelect(alias1, [alias2], [alias3], ...) :**   alias of table to cast. add to current selection
+**join(fromAlias, toAlias, relationName) :**       alias of innerJoin
+**innerJoin(fromAlias, toAlias, relationName) :**  apply inner join between fromAlias' table and toAlias' table with relationName's condition
+**leftJoin(fromAlias, toAlias, relationName) :**   apply left join between fromAlias' table and toAlias' table with relationName's condition
+**where(condition) :**                             apply condition in query. to apply an or condition expressions of DBAL query builder must be used. reset selection
+**andWhere(condition) :**                          apply condition in query. to apply an or condition expressions of DBAL query builder must be used. add to current conditions
+**setParameter(key, value) :**                     parameters to send safely
+**order(sort, order) :**                           order query. reset order
+**addOrder(sort, order) :**                        order query. add to current order
+**limit(first, max) :**                            be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according the conditions request. to use only if needed because a second sql request is sent 
+**first() :**                                      returns one entity. it won't optimize your sql request
+**all() :**                                        returns an array of entities
+
+--------------------------
+
+[author](https://github.com/merry-goblin)
