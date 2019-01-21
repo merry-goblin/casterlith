@@ -1,5 +1,7 @@
-Casterlith DataMapper ORM v1.0
+Casterlith DataMapper ORM
 ========================
+
+[Github](https://github.com/merry-goblin/casterlith)
 
 ### Purpose
 
@@ -147,7 +149,7 @@ class Album extends AbstractMapper implements MapperInterface
 #### Monolith\Casterlith\Casterlith
 
 - **getComposer(className) :**                       returns a specific composer instance
-- **getQueryBuilder() :**                            returns a new DBAl query builder
+- **getQueryBuilder() :**                            returns a new DBAL query builder
 
 #### Monolith\Casterlith\Composer\AbstractComposer
 
