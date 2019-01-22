@@ -10,10 +10,11 @@ $params = array(
 $config = new \Monolith\Casterlith\Configuration();
 $config->setSelectionReplacer("_cl");
 
-$orm = new \Monolith\Casterlith\Casterlith($params, $config);
-$trackComposer = $orm->getComposer('Acme\Composers\Track');
+$orm            = new \Monolith\Casterlith\Casterlith($params, $config);
+$trackComposer  = $orm->getComposer('Acme\Composers\Track');
+$qb             = $trackComposer->getQueryBuilder();
 
-$trackComposer
+$tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
 	->join("t", "alb", "album")
 	->join("t", "it", "invoiceItems")
@@ -26,8 +27,12 @@ $trackComposer
 	->join("inv", "c", "customer")
 	->join("c", "sub", "employee")
 	->join("sub", "sup", "reportsTo")
-	->where("t.TrackId = 3247");
-
-$tracks = $trackComposer->all();
+	->where($qb->expr()->andX(
+		$qb->expr()->like('t.Name', ':trackName'),
+		$qb->expr()->eq('art.Name', ':artistName')
+	))
+	->setParameter('trackName', "%Princess%")
+	->setParameter('artistName', "Accept")
+	->all();
 
 var_dump($tracks);

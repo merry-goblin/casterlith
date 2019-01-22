@@ -32,7 +32,7 @@ DBAL will do the job just fine
 
 ### Sample
 
-This is an example on how map the [database](http://www.sqlitetutorial.net/sqlite-sample-database/) below :
+This is an example on how to map the [database](http://www.sqlitetutorial.net/sqlite-sample-database/) below :
 
 [![chinook](config/sqlite-sample-database-color.jpg)](http://www.sqlitetutorial.net/sqlite-sample-database/)
 
@@ -49,10 +49,11 @@ $params = array(
 $config = new \Monolith\Casterlith\Configuration();
 $config->setSelectionReplacer("_cl");
 
-$orm = new \Monolith\Casterlith\Casterlith($params, $config);
-$trackComposer = $orm->getComposer('Acme\Composers\Track');
+$orm            = new \Monolith\Casterlith\Casterlith($params, $config);
+$trackComposer  = $orm->getComposer('Acme\Composers\Track');
+$qb             = $trackComposer->getQueryBuilder();
 
-$trackComposer
+$tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
 	->join("t", "alb", "album")
 	->join("t", "it", "invoiceItems")
@@ -65,12 +66,15 @@ $trackComposer
 	->join("inv", "c", "customer")
 	->join("c", "sub", "employee")
 	->join("sub", "sup", "reportsTo")
-	->where("t.TrackId = 3247");
-
-$tracks = $trackComposer->all();
+	->where($qb->expr()->andX(
+		$qb->expr()->like('t.Name', ':trackName'),
+		$qb->expr()->eq('art.Name', ':artistName')
+	))
+	->setParameter('trackName', "%Princess%")
+	->setParameter('artistName', "Accept")
+	->all();
 
 var_dump($tracks);
-
 ```
 
 And a sample of a mapper :
@@ -158,14 +162,16 @@ class Album extends AbstractMapper implements MapperInterface
 - **join(fromAlias, toAlias, relationName) :**       see innerJoin method
 - **innerJoin(fromAlias, toAlias, relationName) :**  apply inner join between fromAlias' table and toAlias' table with relationName's condition
 - **leftJoin(fromAlias, toAlias, relationName) :**   apply left join between fromAlias' table and toAlias' table with relationName's condition
-- **where(condition) :**                             apply condition in query. to apply an or condition expressions of DBAL query builder must be used. reset selection
-- **andWhere(condition) :**                          apply condition in query. to apply an or condition expressions of DBAL query builder must be used. add to current conditions
+- **where(condition) :**                             apply condition in query. query builder's expressions are allowed. reset selection
+- **andWhere(condition) :**                          apply an and condition in query. query builder's expressions are allowed. add to current conditions
+- **orWhere(condition) :**                           apply an or condition in query. query builder's expressions are allowed. add to current conditions
 - **setParameter(key, value) :**                     parameters to send safely
 - **order(sort, order) :**                           order query. reset order
 - **addOrder(sort, order) :**                        order query. add to current order
 - **limit(first, max) :**                            be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according the conditions request. to use only if needed because a second sql request is sent 
 - **first() :**                                      returns one entity. it won't optimize your sql request
 - **all() :**                                        returns an array of entities
+- **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions
 
 --------------------------
 

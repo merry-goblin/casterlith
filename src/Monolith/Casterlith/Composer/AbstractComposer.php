@@ -172,6 +172,18 @@ abstract class AbstractComposer
 	}
 
 	/**
+	 * @param  string $condition
+	 * @return Monolith\Casterlith\Composer\ComposerInterface
+	 */
+	public function orWhere($condition)
+	{
+		$this->queryBuilder
+			->orWhere($condition);
+
+		return $this;
+	}
+
+	/**
 	 * @param  string|integer $key
 	 * @param  mixed          $value
 	 * @return Monolith\Casterlith\Composer\ComposerInterface
@@ -309,5 +321,13 @@ abstract class AbstractComposer
 			$this->queryBuilder->addSelect($selection);
 			unset($this->yetToSelectList[$key]);
 		}
+	}
+
+	/**
+	 * @return Doctrine\DBAL\Query\QueryBuilder
+	 */
+	public function getQueryBuilder()
+	{
+		return $this->queryBuilder;
 	}
 }

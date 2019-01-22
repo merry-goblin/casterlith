@@ -34,8 +34,8 @@ class Casterlith
 	}
 
 	/**
-	 * @param  [type] $className [description]
-	 * @return [type]            [description]
+	 * @param  string $className
+	 * @return Monolith\Casterlith\Composer\ComposerInterface
 	 * @throws Exception
 	 */
 	public function getComposer($className)
@@ -49,6 +49,9 @@ class Casterlith
 		return $composer;
 	}
 
+	/**
+	 * @return Doctrine\DBAL\Query\QueryBuilder
+	 */
 	public function getQueryBuilder()
 	{
 		$queryBuilder = $this->connection->createQueryBuilder();
