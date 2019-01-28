@@ -11,9 +11,9 @@ $params = array(
 $config = new \Monolith\Casterlith\Configuration();
 $config->setSelectionReplacer("_cl"); // The replacer insures that table's aliases won't be equal to real database's table names
 
-$orm            = new \Monolith\Casterlith\Casterlith($params, $config); //	Casterlith helps to create new instances of composers
-$trackComposer  = $orm->getComposer('Acme\Composers\Track'); //	Each table has its own composer
-$qb             = $trackComposer->getQueryBuilder(); //	DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+$orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
+$trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
+$qb             = $trackComposer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
 
 $tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
@@ -39,6 +39,6 @@ $tracks = $trackComposer
 // To see the entire dump you can uncomment the 3 lines below
 /*ini_set('xdebug.var_display_max_depth', '20');
 ini_set('xdebug.var_display_max_children', '65536');
-ini_set('xdebug.var_display_max_data', '1048576'); // 1048576*/
+ini_set('xdebug.var_display_max_data', '1048576');*/
 
 var_dump($tracks);

@@ -63,17 +63,4 @@ class Employee extends AbstractMapper implements MapperInterface
 
 		return self::$relations;
 	}
-
-	/**
-	 * @param  string  $relName
-	 * @return Merry\Core\Services\Orm\Casterlith\Relations\RelationInterface
-	 */
-	public static function getRelation($relName)
-	{
-		if (is_null(self::$relations)) {
-			self::getRelations();
-		}
-
-		return self::$relations[$relName];
-	}
 }
