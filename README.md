@@ -11,7 +11,7 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 
 - Standalone
 - Based on [Doctrine DBAL](https://github.com/doctrine/dbal)
-- Inspired by [Sport DataMapper ORM](https://github.com/spotorm/spot2)
+- Inspired by [Spot DataMapper ORM](https://github.com/spotorm/spot2)
 - Converts joins into object associations
 - Can map your entire database into one single array
 - Relations can go in both ways
