@@ -18,6 +18,9 @@
         "doctrine/dbal": "^2.5"
     },
     "autoload": {
+        "psr-0": {
+            "Monolith\\Casterlith\\": "src/"
+        },
         "psr-4": {
             "": "src/"
         }

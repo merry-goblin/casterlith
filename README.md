@@ -36,6 +36,7 @@ This is an example on how to map the [database](http://www.sqlitetutorial.net/sq
 
 [![chinook](config/sqlite-sample-database-color.jpg)](http://www.sqlitetutorial.net/sqlite-sample-database/)
 
+**web/index.php :**
 ```
 <?php
 
@@ -85,6 +86,7 @@ var_dump($tracks);
 
 And a sample of a mapper :
 
+**src/Acme/Mappers/Album.php :**
 ```
 <?php
 
