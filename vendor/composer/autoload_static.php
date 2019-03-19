@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit022becaf5453f8a864d9f5a53a279fac
+class ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c
 {
     public static $prefixLengthsPsr4 = array (
         'D' => 
@@ -39,7 +39,7 @@ class ComposerStaticInit022becaf5453f8a864d9f5a53a279fac
         array (
             'Monolith\\Casterlith\\' => 
             array (
-                0 => __DIR__ . '/../..' . '/src',
+                0 => __DIR__ . '/..' . '/merry-goblin/casterlith',
             ),
         ),
         'D' => 
@@ -66,10 +66,10 @@ class ComposerStaticInit022becaf5453f8a864d9f5a53a279fac
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit022becaf5453f8a864d9f5a53a279fac::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit022becaf5453f8a864d9f5a53a279fac::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit022becaf5453f8a864d9f5a53a279fac::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit022becaf5453f8a864d9f5a53a279fac::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

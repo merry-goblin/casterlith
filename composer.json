@@ -1,26 +1,8 @@
 {
-    "name": "merry-goblin/casterlith",
-    "type": "library",
-    "description": "Casterlith ORM for PHP >= 5.3 Based on Doctrine/DBAL",
-    "keywords": ["orm","dbal","php"],
-    "homepage": "https://github.com/merry-goblin/casterlith",
-    "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "Alexandre Keller",
-            "email": "keller.alexandre0@gmail.com",
-            "homepage": "https://github.com/merry-goblin",
-            "role": "Developer"
-        }
-    ],
     "require": {
-        "php": ">=5.3.0",
-        "doctrine/dbal": "^2.5"
+        "merry-goblin/casterlith": "dev-master"
     },
     "autoload": {
-        "psr-0": {
-            "Monolith\\Casterlith\\": "src/"
-        },
         "psr-4": {
             "": "src/"
         }

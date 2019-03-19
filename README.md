@@ -26,6 +26,23 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 - SQLite
 - Drizzle
 
+### Easy to install
+
+php composer require merry-goblin/casterlith:"dev-master"
+
+or
+
+git clone merry-goblin/casterlith-composer
+
+No sample files will be included. 
+See the paragraph below to test Casterlith.
+
+### Install a standalone sample of Casterlith ready to be used
+
+git clone merry-goblin/casterlith
+
+Sample's entry point is "web/index.php".
+
 ### INSERT, UPDATE, DELETE
 
 DBAL will do the job just fine

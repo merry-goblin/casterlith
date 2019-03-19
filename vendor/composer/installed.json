@@ -482,5 +482,52 @@
             "lexer",
             "parser"
         ]
+    },
+    {
+        "name": "merry-goblin/casterlith",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/merry-goblin/casterlith-composer.git",
+            "reference": "17c201778ab45aaac89b392958fe48ad684d1622"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/merry-goblin/casterlith-composer/zipball/17c201778ab45aaac89b392958fe48ad684d1622",
+            "reference": "17c201778ab45aaac89b392958fe48ad684d1622",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/dbal": "^2.5",
+            "php": ">=5.3.0"
+        },
+        "time": "2019-03-19T09:40:01+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Monolith\\Casterlith\\": "/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Alexandre Keller",
+                "email": "keller.alexandre0@gmail.com",
+                "homepage": "https://github.com/merry-goblin",
+                "role": "Developer"
+            }
+        ],
+        "description": "Casterlith ORM for PHP >= 5.3 Based on Doctrine/DBAL (composer version)",
+        "homepage": "https://github.com/merry-goblin/casterlith-composer",
+        "keywords": [
+            "dbal",
+            "orm",
+            "php"
+        ]
     }
 ]
