@@ -15,6 +15,7 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 - Converts joins into object associations
 - Can map your entire database into one single array
 - Relations can go in both ways
+- Compatible PHP >= 5.3 
 
 ### Supported databases
 
@@ -28,11 +29,9 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 
 ### Easy to install
 
-php composer require merry-goblin/casterlith:"dev-master"
-
+- php composer require merry-goblin/casterlith:"dev-master"
 or
-
-git clone merry-goblin/casterlith-composer
+- git clone merry-goblin/casterlith-composer
 
 No sample files will be included. 
 See the paragraph below to test Casterlith.
