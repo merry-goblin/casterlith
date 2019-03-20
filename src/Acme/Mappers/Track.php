@@ -41,7 +41,7 @@ class Track extends AbstractMapper implements MapperInterface
 				'Composer'      => array('type' => 'string'),
 				'Milliseconds'  => array('type' => 'integer'),
 				'Bytes'         => array('type' => 'integer'),
-				'UnitPrice'     => array('type' => 'numeric'),
+				'UnitPrice'     => array('type' => 'decimal'),
 			);
 		}
 

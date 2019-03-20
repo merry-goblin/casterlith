@@ -11,6 +11,7 @@ class Track implements EntityInterface
 	public $Name          = null;
 	public $AlbumId       = null;
 	public $MediaTypeId   = null;
+	public $GenreId       = null;
 	public $Composer      = null;
 	public $Milliseconds  = null;
 	public $Bytes         = null;

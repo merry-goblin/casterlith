@@ -33,7 +33,7 @@ class InvoiceItem extends AbstractMapper implements MapperInterface
 				'InvoiceItemId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
 				'InvoiceId'      => array('type' => 'integer'),
 				'TrackId'        => array('type' => 'integer'),
-				'UnitPrice'      => array('type' => 'numeric'),
+				'UnitPrice'      => array('type' => 'decimal'),
 				'Quantity'       => array('type' => 'integer'),
 			);
 		}
