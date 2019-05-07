@@ -29,8 +29,10 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 
 ### Easy to install
 
-- php composer require merry-goblin/casterlith:"dev-master"
+- composer require merry-goblin/casterlith:"dev-master"
+
 or
+
 - git clone merry-goblin/casterlith-composer
 
 No sample files will be included. 
@@ -38,13 +40,51 @@ See the paragraph below to test Casterlith.
 
 ### Install a standalone sample of Casterlith ready to be used
 
-git clone merry-goblin/casterlith
+- git clone merry-goblin/casterlith
 
 Sample's entry point is "web/index.php".
 
+### Database connection & Casterlith configuration
+
+```
+$params = array(
+	'driver'    => 'pdo_sqlite',
+	'path'      => __DIR__."/../config/chinook.db",
+	'memory'    => false,
+);
+$config = new \Monolith\Casterlith\Configuration();
+$casterlith = new \Monolith\Casterlith\Casterlith();
+```
+
 ### INSERT, UPDATE, DELETE
 
-DBAL will do the job just fine
+[DBAL](https://github.com/doctrine/dbal) will do the job just fine
+
+```
+<?php
+
+require_once(__DIR__."/../vendor/autoload.php");
+
+//	Parameters to connect on SQLite database
+$params = array(
+	'driver'    => 'pdo_sqlite',
+	'path'      => __DIR__."/../config/chinook.db",
+	'memory'    => false,
+);
+$config = new \Monolith\Casterlith\Configuration();
+$config->setSelectionReplacer("_cl"); // The replacer insures that table's aliases won't be equal to real database's table names
+
+$orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
+$trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
+$qb             = $trackComposer->getQueryBuilder();
+
+
+	
+
+```
+
+
+Look for executeUpdate($sql, $params, $types)
 
 ### Sample
 
@@ -159,12 +199,13 @@ class Album extends AbstractMapper implements MapperInterface
 }
 ```
 
-### Methods available
+### Available methods
 
 #### Monolith\Casterlith\Casterlith
 
 - **getComposer(className) :**                       returns a specific composer instance
 - **getQueryBuilder() :**                            returns a new DBAL query builder
+- **getDBALConnection() :**                          returns a new DBAL connection (raw sql queries)
 
 #### Monolith\Casterlith\Composer\AbstractComposer
 
