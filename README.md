@@ -74,17 +74,29 @@ $params = array(
 $config = new \Monolith\Casterlith\Configuration();
 $config->setSelectionReplacer("_cl"); // The replacer insures that table's aliases won't be equal to real database's table names
 
-$orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
-$trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
-$qb             = $trackComposer->getQueryBuilder();
+$orm  = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
+$dbal = $orm->getDBALConnection();
 
+$sql = "
+	UPDATE albums
+	SET   Title   = :title
+	WHERE AlbumId = :id
+";
+$values = array(
+	'id'    => 3,
+	'title' => "Restless and Wild (updated ".time().")",
+);
 
-	
+$numberOfUpdatedRows = $dbal->executeUpdate($sql, $values);
+if ($numberOfUpdatedRows === false) {
+	echo "An error occured";
+}
+else {
+	echo "Update successful";
+}
 
 ```
-
-
-Look for executeUpdate($sql, $params, $types)
+More informations on ["Data Retrieval And Manipulation" here](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/data-retrieval-and-manipulation.html#data-retrieval-and-manipulation).
 
 ### Sample
 
@@ -205,7 +217,8 @@ class Album extends AbstractMapper implements MapperInterface
 
 - **getComposer(className) :**                       returns a specific composer instance
 - **getQueryBuilder() :**                            returns a new DBAL query builder
-- **getDBALConnection() :**                          returns a new DBAL connection (raw sql queries)
+- **getDBALConnection() :**                          returns a new DBAL connection (raw sql queries with DBAL wrapping)
+- **getPDOConnection() :**                           returns a new PDO connection (raw sql queries)
 
 #### Monolith\Casterlith\Composer\AbstractComposer
 
@@ -224,6 +237,8 @@ class Album extends AbstractMapper implements MapperInterface
 - **first() :**                                      returns one entity. it won't optimize your sql request
 - **all() :**                                        returns an array of entities
 - **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions
+- **getDBALConnection() :**                          returns the composer's DBAL connection. Usefull to use raw sql queries.
+- **getPDOConnection() :**                           returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
 
 --------------------------
 
