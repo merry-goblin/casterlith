@@ -222,6 +222,9 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 
 #### Monolith\Casterlith\Composer\AbstractComposer
 
+Warning! limit must be called just before first or all methods (even setParameter must be called before limit).
+It will be fixed later but for now that solve the problem.
+
 - **select(alias1, [alias2], [alias3], ...) :**      aliases of table to cast. reset selection
 - **addSelect(alias1, [alias2], [alias3], ...) :**   aliases of table to cast. add to current selection
 - **join(fromAlias, toAlias, relationName) :**       see innerJoin method
@@ -233,7 +236,7 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 - **setParameter(key, value) :**                     parameters to send safely
 - **order(sort, order) :**                           order query. reset order
 - **addOrder(sort, order) :**                        order query. add to current order
-- **limit(first, max) :**                            be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according the conditions request. to use only if needed because a second sql request is sent 
+- **limit(first, max) :**                            be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according the conditions request. to use only if needed because a second sql request is sent. 
 - **first() :**                                      returns one entity. it won't optimize your sql request
 - **all() :**                                        returns an array of entities
 - **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions

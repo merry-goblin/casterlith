@@ -9,6 +9,7 @@ class ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c
     public static $prefixLengthsPsr4 = array (
         'D' => 
         array (
+            'Doctrine\\Common\\Lexer\\' => 22,
             'Doctrine\\Common\\Cache\\' => 22,
             'Doctrine\\Common\\Annotations\\' => 28,
             'Doctrine\\Common\\' => 16,
@@ -16,6 +17,10 @@ class ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c
     );
 
     public static $prefixDirsPsr4 = array (
+        'Doctrine\\Common\\Lexer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
+        ),
         'Doctrine\\Common\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
@@ -47,10 +52,6 @@ class ComposerStaticInitdba93e013383298ce7a2a7ad88d28e5c
             'Doctrine\\DBAL\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
-            ),
-            'Doctrine\\Common\\Lexer\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
             ),
             'Doctrine\\Common\\Inflector\\' => 
             array (
