@@ -43,8 +43,8 @@ class PlaylistTrack extends AbstractMapper implements MapperInterface
 	{
 		if (is_null(self::$relations)) {
 			self::$relations = array(
-				'playlist' => new OneToMany(new PlaylistMapper(), 'pt', 'p', 'pt.PlaylistId = p.PlaylistId', 'playlistTracks'),
-				'track'    => new OneToMany(new TrackMapper(), 'pt', 't', '`pt`.TrackId = `t`.TrackId', 'playlistTracks'),
+				'playlist' => new ManyToOne(new PlaylistMapper(), 'pt', 'p', 'pt.PlaylistId = p.PlaylistId', 'playlistTracks'),
+				'track'    => new ManyToOne(new TrackMapper(), 'pt', 't', '`pt`.TrackId = `t`.TrackId', 'playlistTracks'),
 			);
 		}
 
