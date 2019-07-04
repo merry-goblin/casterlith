@@ -243,6 +243,38 @@ It will be fixed later but for now that solve the problem.
 - **getDBALConnection() :**                          returns the composer's DBAL connection. Usefull to use raw sql queries.
 - **getPDOConnection() :**                           returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
 
+### Joints
+
+In a table mapper, one or several joints can be defined.
+A joint is a relation between the current entity another and can be of one of the two types below :
+
+#### Monolith\Casterlith\Relations\OneToMany
+
+When an entity (from) is related to many entities (to) through a single relation, **OneToMany** must be used.
+For example : A **Book** has a joint named **pages**. It is a **OneToMany** relationship. pages will be an array of **Page** entities.
+
+#### Monolith\Casterlith\Relations\ManyToOne
+
+When an entity (from) is related to one and one only entity (to) through a single relation, **ManyToOne** must be used.
+For example : A **Page** has a joint named **book**. It is a **ManyToOne** relationship. book will be an entity of **Page**.
+
+#### What about OneToOne relationship ?
+
+To build a **OneToOne** relationship, a **ManyToOne** can be used. If it is a mutual relationship, **ManyToOne** has to be used on each side.
+
+#### What about ManyToMany relationship ?
+
+The **ManyToMany** relationship is a magical relationship.
+In the sample above, the playlist_track which is related to playlist and track is the result of a **ManyToMany** relationship.
+To map those entities and connect them :
+
+**Playlist** has a joint named **playlistTracks** of type **OneToMany**
+**Track** has a joint named **playlistTracks** of type **OneToMany**
+
+**PlaylistTrack** has two joints
+- one joint named **playlist** of type **ManyToOne**
+- one joint named **track** of type **ManyToOne**
+
 --------------------------
 
 author : [alexandre keller](https://github.com/merry-goblin)
