@@ -246,7 +246,7 @@ It will be fixed later but for now that solve the problem.
 ### Joints
 
 In a table mapper, one or several joints can be defined.
-A joint is a relation between the current entity another and can be of one of the two types below :
+A joint is a relation between the current entity and another which can be of one of the two types below :
 
 #### Monolith\Casterlith\Relations\OneToMany
 
