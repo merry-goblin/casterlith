@@ -242,6 +242,7 @@ It will be fixed later but for now that solve the problem.
 - **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions
 - **getDBALConnection() :**                          returns the composer's DBAL connection. Usefull to use raw sql queries.
 - **getPDOConnection() :**                           returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
+- **getSQL() :**                                     get a sql version of the current composition.
 
 ### Joints
 
