@@ -246,7 +246,7 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 	- **all() :**                                        returns an array of entities
 	- **limit(first, max) :**                            returns an array of entities. be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according to the conditions request. to use only if needed because a second sql request is sent. 
 
-- **Build a request:** A SQL request can build with an abstraction or in raw SQL if needed
+- **Build a request**
 	- **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions
 	- **getDBALConnection() :**                          returns the composer's DBAL connection. Usefull to use raw sql queries.
 	- **getPDOConnection() :**                           returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
