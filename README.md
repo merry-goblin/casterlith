@@ -222,23 +222,35 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 
 #### Monolith\Casterlith\Composer\AbstractComposer
 
-Warning! limit must be called just before first or all methods (even setParameter must be called before limit).
-It will be fixed later but for now that solve the problem.
+**Selection : Entities to load**
 
 - **select(alias1, [alias2], [alias3], ...) :**      aliases of table to cast. reset selection
 - **addSelect(alias1, [alias2], [alias3], ...) :**   aliases of table to cast. add to current selection
+
+**Joints: Relation between entities**
+
 - **join(fromAlias, toAlias, relationName) :**       see innerJoin method
 - **innerJoin(fromAlias, toAlias, relationName) :**  apply inner join between fromAlias' table and toAlias' table with relationName's condition
 - **leftJoin(fromAlias, toAlias, relationName) :**   apply left join between fromAlias' table and toAlias' table with relationName's condition
+
+**Conditions: They filter the result**
+
 - **where(condition) :**                             apply condition in query. query builder's expressions are allowed. reset selection
 - **andWhere(condition) :**                          apply an and condition in query. query builder's expressions are allowed. add to current conditions
 - **orWhere(condition) :**                           apply an or condition in query. query builder's expressions are allowed. add to current conditions
 - **setParameter(key, value) :**                     parameters to send safely
+
+**Orders: They return the rows in certain order**
+
 - **order(sort, order) :**                           order query. reset order
 - **addOrder(sort, order) :**                        order query. add to current order
-- **limit(first, max) :**                            be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according the conditions request. to use only if needed because a second sql request is sent. 
+
+**Response: The result of the sql request returned as entity(ies)**
+
 - **first() :**                                      returns one entity. it won't optimize your sql request
 - **all() :**                                        returns an array of entities
+- **limit(first, max) :**                            returns an array of entities. be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according to the conditions request. to use only if needed because a second sql request is sent. 
+
 - **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions
 - **getDBALConnection() :**                          returns the composer's DBAL connection. Usefull to use raw sql queries.
 - **getPDOConnection() :**                           returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
@@ -247,25 +259,26 @@ It will be fixed later but for now that solve the problem.
 ### Joints
 
 In a table mapper, one or several joints can be defined.
-A joint is a relation between the current entity and another which can be of one of the two types below :
+A joint is a relation between the current entity and another which can be of one of the three types below :
+
+#### Monolith\Casterlith\Relations\OneToOne
+
+When an entity (from) is related to one and one only entity (to) and this entity (to) is related to only one entity (from), **OneToOne** must be used.
+For example : A **Person** has a joint named **passport**. It is a **OneToOne** relationship. passport will be an entity of **Passport** because a passport belongs to only one person.
 
 #### Monolith\Casterlith\Relations\OneToMany
 
-When an entity (from) is related to many entities (to) through a single relation, **OneToMany** must be used.
-For example : A **Book** has a joint named **pages**. It is a **OneToMany** relationship. pages will be an array of **Page** entities.
+When an entity (from) is related to many entities (to) and this entity (to) is related to only one entity (from), **OneToMany** must be used.
+For example : A **Book** has a joint named **pages**. It is a **OneToMany** relationship. pages will be an array of **Page** entities because a page belongs to only one book.
 
 #### Monolith\Casterlith\Relations\ManyToOne
 
-When an entity (from) is related to one and one only entity (to) through a single relation, **ManyToOne** must be used.
-For example : A **Page** has a joint named **book**. It is a **ManyToOne** relationship. book will be an entity of **Page**.
-
-#### What about OneToOne relationship ?
-
-To build a **OneToOne** relationship, a **ManyToOne** can be used. If it is a mutual relationship, **ManyToOne** has to be used on each side.
+When an entity (from) is related to one and one only entity (to) and this entity (to) is related to many entities (from), **ManyToOne** must be used.
+For example : A **Page** has a joint named **book**. It is a **ManyToOne** relationship. book will be an entity of **Book** because a book has got many pages.
 
 #### What about ManyToMany relationship ?
 
-The **ManyToMany** relationship is a magical relationship.
+The **ManyToMany** relationship is a magical relationship and it's behavior I want to prevent in Casterlith.
 In the sample above, the playlist_track which is related to playlist and track is the result of a **ManyToMany** relationship.
 To map those entities and connect them :
 
