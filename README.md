@@ -285,6 +285,11 @@ To map those entities and connect them :
 - one joint named **playlist** of type **ManyToOne**
 - one joint named **track** of type **ManyToOne**
 
+### Unit tests
+
+Unit tests are made with [atoum](http://atoum.org/)
+**Linux :** ./vendor/bin/atoum -d tests/units
+
 --------------------------
 
 author : [alexandre keller](https://github.com/merry-goblin)

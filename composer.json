@@ -1,6 +1,7 @@
 {
     "require": {
-        "merry-goblin/casterlith": "dev-master"
+        "merry-goblin/casterlith": "dev-master",
+        "atoum/atoum": "dev-master"
     },
     "autoload": {
         "psr-4": {
