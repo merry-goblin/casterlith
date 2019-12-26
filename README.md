@@ -288,7 +288,8 @@ To map those entities and connect them :
 ### Unit tests
 
 Unit tests are made with [atoum](http://atoum.org/)
-**Linux :** ./vendor/bin/atoum -d tests/units
+
+./vendor/bin/atoum -d tests/units
 
 --------------------------
 

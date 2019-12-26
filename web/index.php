@@ -15,6 +15,9 @@ $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Cas
 $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
 $qb             = $trackComposer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
 
+echo $trackComposer
+	->select("t")->getSQL();
+
 $tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
 	->join("t", "alb", "album")
