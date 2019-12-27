@@ -223,8 +223,10 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 #### Monolith\Casterlith\Composer\AbstractComposer
 
 - **Selection :** Entities to load
-	- **select(alias1, [alias2], [alias3], ...) :**      aliases of table to cast. reset selection
-	- **addSelect(alias1, [alias2], [alias3], ...) :**   aliases of table to cast. add to current selection
+	- **select(alias1, [alias2], [alias3], ...) :**                               aliases of table to cast. reset selection
+	- **addSelect(alias1, [alias2], [alias3], ...) :**                            aliases of table to cast. add to current selection
+	- **selectAsRaw(alias1, [sqlSelection1], [sqlSelection2], ...) :**            alias of table then raw sql selectors. reset selection
+	- **addSelectAsRaw(sqlSelection1, [sqlSelection2], [sqlSelection3], ...) :**  raw sql selectors. add to current selection
 
 - **Joints:** Relation between entities
 	- **join(fromAlias, toAlias, relationName) :**       see innerJoin method
