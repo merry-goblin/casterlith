@@ -139,6 +139,39 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testSelectWithResetOfSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer->select('art', 'alb');
+		$query->join('art', 'alb', 'albums');
+		$query->select('art');
+		$query->all();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art")
+		;
+	}
+
+	public function testTwoSelectWithTheSameQuery()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer->select('art', 'alb');
+		$query->join('art', 'alb', 'albums');
+		$query->all();
+
+		$query->select('art', 'alb');
+		$query->join('art', 'alb', 'albums');
+		$query->all();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId")
+		;
+	}
+
 	/*** addSelect ***/
 
 	public function testAddSelectWithEntityAlias()
@@ -214,6 +247,24 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testAddSelectWithResetOfSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer->select('art');
+		$query->addSelect('alb');
+		$query->join('art', 'alb', 'albums');
+		$query->select('art');
+		$query->addSelect('alb');
+		$query->join('art', 'alb', 'albums');
+		$query->all();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId")
+		;
+	}
+
 	/*** selectAsRaw ***/
 
 	public function testSelectAsRawWithOnlyAnEntityAlias()
@@ -270,6 +321,22 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testSelectAsRawWithResetOfSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb');
+		$query->join('art', 'alb', 'albums');
+		$query->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb');
+		$query->join('art', 'alb', 'albums');
+		$query->all();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId")
+		;
+	}
+
 	/*** addSelectAsRaw ***/
 
 	public function testAddSelectAsRawWithACounter()
@@ -311,6 +378,24 @@ class AbstractComposer extends atoum
 		$this
 			->string($query->getSQL())
 				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2 FROM artists art")
+		;
+	}
+
+	public function testAddSelectAsRawWithResetOfSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer->selectAsRaw('art');
+		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb');
+		$query->join('art', 'alb', 'albums');
+		$query->selectAsRaw('art');
+		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb');
+		$query->join('art', 'alb', 'albums');
+		$query->all();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId")
 		;
 	}
 
@@ -386,7 +471,7 @@ class AbstractComposer extends atoum
 		;
 	}
 
-	public function testJoinWithTheAnEmptyEntityAlias()
+	public function testJoinWithAnEmptyEntityAlias()
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
@@ -403,6 +488,21 @@ class AbstractComposer extends atoum
 			->exception(
 				function() use($query) {
 					$query->join('', 'alb', 'albums');
+				}
+			)
+		;
+	}
+
+	public function testJoinWithWrongNames()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer->select('art', 'alb');
+
+		$this
+			->exception(
+				function() use($query) {
+					$query->join('art', 'alb', 'albumz');
 				}
 			)
 		;
