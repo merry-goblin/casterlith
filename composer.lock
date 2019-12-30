@@ -571,12 +571,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/merry-goblin/casterlith-composer.git",
-                "reference": "95dbe3b712195cd018c6633c1b6331689895c236"
+                "reference": "d2afc280798d22237d427068eb432abe10178604"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/merry-goblin/casterlith-composer/zipball/95dbe3b712195cd018c6633c1b6331689895c236",
-                "reference": "95dbe3b712195cd018c6633c1b6331689895c236",
+                "url": "https://api.github.com/repos/merry-goblin/casterlith-composer/zipball/d2afc280798d22237d427068eb432abe10178604",
+                "reference": "d2afc280798d22237d427068eb432abe10178604",
                 "shasum": ""
             },
             "require": {
@@ -608,7 +608,7 @@
                 "orm",
                 "php"
             ],
-            "time": "2019-12-27T17:54:04+00:00"
+            "time": "2019-12-29T23:02:52+00:00"
         }
     ],
     "packages-dev": [],
