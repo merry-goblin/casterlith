@@ -41,6 +41,7 @@ See the paragraph below to test Casterlith.
 ### Install a standalone sample of Casterlith ready to be used
 
 - git clone merry-goblin/casterlith
+- composer install
 
 Sample's entry point is "web/index.php".
 
