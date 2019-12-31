@@ -54,7 +54,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
+		$query = $composer
+			->select('art')
+		;
 		$art = $query->first();
 
 		$this
@@ -75,9 +77,11 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->join('art', 'alb', 'albums');
-		$query->first();
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+		;
+		$artist = $query->first();
 
 		$this
 			->string($query->getSQL())
@@ -117,7 +121,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance("_cr");
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
+		$query = $composer
+			->select('art')
+		;
 
 		$this
 			->string($query->getSQL())
@@ -143,10 +149,12 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->join('art', 'alb', 'albums');
-		$query->select('art');
-		$query->first();
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->select('art')
+		;
+		$artist = $query->first();
 
 		$this
 			->string($query->getSQL())
@@ -158,17 +166,22 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->join('art', 'alb', 'albums');
-		$query->first();
-
-		$query->select('art', 'alb');
-		$query->join('art', 'alb', 'albums');
-		$query->first();
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId = 1')
+		;
+		$artist1 = $query->first();
+		$query
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId = 2')
+		;
+		$artist2 = $query->first();
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE art.ArtistId IN (1)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId = 2) AND (art.ArtistId IN (2))")
 		;
 	}
 
@@ -178,8 +191,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->addSelect('alb');
+		$query = $composer
+			->select('art')
+			->addSelect('alb')
+		;
 
 		$this
 			->string($query->getSQL())
@@ -191,7 +206,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
+		$query = $composer
+			->select('art')
+		;
 
 		$this
 			->exception(
@@ -206,7 +223,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
+		$query = $composer->
+			select('art')
+		;
 
 		$this
 			->exception(
@@ -221,7 +240,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
+		$query = $composer
+			->select('art')
+		;
 
 		$this
 			->exception(
@@ -236,7 +257,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
+		$query = $composer
+			->select('art')
+		;
 
 		$this
 			->exception(
@@ -251,12 +274,14 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->addSelect('alb');
-		$query->join('art', 'alb', 'albums');
-		$query->select('art');
-		$query->addSelect('alb');
-		$query->join('art', 'alb', 'albums');
+		$query = $composer
+			->select('art')
+			->addSelect('alb')
+			->join('art', 'alb', 'albums')
+			->select('art')
+			->addSelect('alb')
+			->join('art', 'alb', 'albums')
+		;
 		$query->first();
 
 		$this
@@ -271,7 +296,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art');
+		$query = $composer
+			->selectAsRaw('art')
+		;
 
 		$this
 			->exception(
@@ -286,7 +313,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb')
+		;
 		$query->first();
 
 		$this
@@ -299,7 +328,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb', 'count(distinct(art.ArtistId)) as nb2');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb', 'count(distinct(art.ArtistId)) as nb2')
+		;
 		$query->first();
 
 		$this
@@ -312,7 +343,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2')
+		;
 		$query->first();
 
 		$this
@@ -325,10 +358,12 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb');
-		$query->join('art', 'alb', 'albums');
-		$query->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb');
-		$query->join('art', 'alb', 'albums');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb')
+			->join('art', 'alb', 'albums')
+			->selectAsRaw('art', 'count(distinct(art.ArtistId)) as nb')
+			->join('art', 'alb', 'albums')
+		;
 		$query->first();
 
 		$this
@@ -343,8 +378,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art');
-		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb');
+		$query = $composer
+			->selectAsRaw('art')
+			->addSelectAsRaw('count(distinct(art.ArtistId)) as nb')
+		;
 		$query->first();
 
 		$this
@@ -357,8 +394,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art');
-		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb', 'count(distinct(art.ArtistId)) as nb2');
+		$query = $composer
+			->selectAsRaw('art')
+			->addSelectAsRaw('count(distinct(art.ArtistId)) as nb', 'count(distinct(art.ArtistId)) as nb2')
+		;
 		$query->first();
 
 		$this
@@ -371,8 +410,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art');
-		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2');
+		$query = $composer
+			->selectAsRaw('art')
+			->addSelectAsRaw('count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2')
+		;
 		$query->first();
 
 		$this
@@ -385,12 +426,14 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->selectAsRaw('art');
-		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb');
-		$query->join('art', 'alb', 'albums');
-		$query->selectAsRaw('art');
-		$query->addSelectAsRaw('count(distinct(art.ArtistId)) as nb');
-		$query->join('art', 'alb', 'albums');
+		$query = $composer
+			->selectAsRaw('art')
+			->addSelectAsRaw('count(distinct(art.ArtistId)) as nb')
+			->join('art', 'alb', 'albums')
+			->selectAsRaw('art')
+			->addSelectAsRaw('count(distinct(art.ArtistId)) as nb')
+			->join('art', 'alb', 'albums')
+		;
 		$query->first();
 
 		$this
@@ -405,8 +448,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->join('art', 'alb', 'albums');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+		;
 		$artist = $query->first();
 
 		$this
@@ -428,8 +473,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->join('art', 'alb', 'albums');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+		;
 		$artists = $query->all();
 		$artist = $artists[227];
 
@@ -470,8 +517,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->join('art', 'alb', 'albumsNoRecursion');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albumsNoRecursion')
+		;
 		$artists = $query->all();
 		$artist = $artists[227];
 
@@ -512,7 +561,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
+		$query = $composer
+			->select('art', 'alb')
+		;
 
 		$this
 			->exception(
@@ -527,7 +578,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
+		$query = $composer
+			->select('art', 'alb')
+		;
 
 		$this
 			->exception(
@@ -556,7 +609,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
+		$query = $composer
+			->select('art', 'alb')
+		;
 
 		$this
 			->exception(
@@ -590,8 +645,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->leftJoin('art', 'alb', 'albums');
+		$query = $composer
+			->select('art', 'alb')
+			->leftJoin('art', 'alb', 'albums')
+		;
 		$artist = $query->first();
 
 		$this
@@ -613,8 +670,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->leftJoin('art', 'alb', 'albums');
+		$query = $composer
+			->select('art', 'alb')
+			->leftJoin('art', 'alb', 'albums')
+		;
 		$artists = $query->all();
 		$artist = $artists[227];
 
@@ -655,8 +714,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
-		$query->leftJoin('art', 'alb', 'albumsNoRecursion');
+		$query = $composer
+			->select('art', 'alb')
+			->leftJoin('art', 'alb', 'albumsNoRecursion')
+		;
 		$artists = $query->all();
 		$artist = $artists[227];
 
@@ -697,7 +758,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
+		$query = $composer
+			->select('art', 'alb')
+		;
 
 		$this
 			->exception(
@@ -712,7 +775,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
+		$query = $composer
+			->select('art', 'alb')
+		;
 
 		$this
 			->exception(
@@ -741,7 +806,9 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art', 'alb');
+		$query = $composer
+			->select('art', 'alb')
+		;
 
 		$this
 			->exception(
@@ -775,8 +842,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->where('art.Name = "Green Day"');
+		$query = $composer
+			->select('art')
+			->where('art.Name = "Green Day"')
+		;
 		$artists = $query->all();
 		$artist  = reset($artists);
 
@@ -798,8 +867,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->where('art.Name = "Green Day"');
+		$query = $composer
+			->select('art')
+			->where('art.Name = "Green Day"')
+		;
 		$artist = $query->first();
 
 		$this
@@ -820,8 +891,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->where('art.Name = \'Green Day\'');
+		$query = $composer
+			->select('art')
+			->where('art.Name = \'Green Day\'')
+		;
 		$artist = $query->first();
 
 		$this
@@ -834,8 +907,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->where('`art`.`Name` = "Green Day"');
+		$query = $composer
+			->select('art')
+			->where('`art`.`Name` = "Green Day"')
+		;
 		$artist = $query->first();
 
 		$this
@@ -848,8 +923,10 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art');
-		$query->where('art.ArtistId = 54');
+		$query = $composer
+			->select('art')
+			->where('art.ArtistId = 54')
+		;
 		$artist = $query->first();
 
 		$this
@@ -956,7 +1033,606 @@ class AbstractComposer extends atoum
 		;
 	}
 
-	/*** addWhere ***/
+	/*** andWhere ***/
+
+	public function testAndWhereAll()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.Name = "Green Day"')
+			->andWhere('art.ArtistId = 54')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(54)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") AND (art.ArtistId = 54)")
+		;
+	}
+
+	public function testAndWhereFirst()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.Name = "Green Day"')
+			->andWhere('art.ArtistId = 54')
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(54)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") AND (art.ArtistId = 54) AND (art.ArtistId IN (54))")
+		;
+	}
+
+	public function testAndWhereWithApostrophe()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.ArtistId IS NOT NULL')
+			->andWhere('art.Name = \'Green Day\'')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId IS NOT NULL) AND (art.Name = 'Green Day') AND (art.ArtistId IN (54))")
+		;
+	}
+
+	public function testAndWhereWithGraveAccent()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('`art`.`Name` = "Green Day"')
+			->andWhere('`art`.`ArtistId` = 54')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` = 54) AND (art.ArtistId IN (54))")
+		;
+	}
+
+	public function testAndWhereWithInteger()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.ArtistId IS NOT NULL')
+			->andWhere('art.ArtistId = 54')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId IS NOT NULL) AND (art.ArtistId = 54) AND (art.ArtistId IN (54))")
+		;
+	}
+
+	public function testAndWhereWithDateTime()
+	{
+		$dt = new \DateTime("2013-12-04 00:00:00");
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\InvoiceComposer');
+		$query = $composer
+			->select('inv')
+			->where('inv.InvoiceId IS NOT NULL')
+			->andWhere('inv.InvoiceDate = :invoiceDate')
+			->setParameter('invoiceDate', $dt->format("Y-m-d H:i:s"))
+		;
+		$invoice = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE (inv.InvoiceId IS NOT NULL) AND (inv.InvoiceDate = :invoiceDate) AND (inv.InvoiceId IN (406))")
+		;
+		$this
+			->dateTime($invoice->InvoiceDate)
+				->hasDateAndTime('2013', '12', '04', '00', '00', '00')
+		;
+	}
+
+	public function testAndWhereWithExpressionBuilder()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$qb = $composer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId IS NOT NULL')
+			->andWhere($qb->expr()->andX(
+				$qb->expr()->eq('art.Name', ':artistName'),
+				$qb->expr()->neq('art.Name', ':notArtistName'),
+				$qb->expr()->lt('art.ArtistId', ':ltArtistId'),
+				$qb->expr()->lte('art.ArtistId', ':lteArtistId'),
+				$qb->expr()->gt('art.ArtistId', ':gtArtistId'),
+				$qb->expr()->gte('art.ArtistId', ':gteArtistId'),
+				$qb->expr()->isNull('null'),
+				$qb->expr()->isNotNull('alb.AlbumId'),
+				$qb->expr()->like('alb.Title', ':albumTitle'),
+				$qb->expr()->notLike('alb.Title', ':notAlbumTitle'),
+				$qb->expr()->in('alb.AlbumId', ':inAlbumIds'),
+				$qb->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
+				$qb->expr()->orX(
+					$qb->expr()->eq('art.Name', ':orXArtistId'),
+					$qb->expr()->eq('art.Name', ':orXArtistName')
+				)
+			))
+			->setParameter('artistName', "Audioslave")
+			->setParameter('notArtistName', "BackBeat")
+			->setParameter('ltArtistId', 9)
+			->setParameter('lteArtistId', 8)
+			->setParameter('gtArtistId', 7)
+			->setParameter('gteArtistId', 8)
+			->setParameter('albumTitle', "%Exile")
+			->setParameter('notAlbumTitle', "Carnaval%")
+			->setParameter('inAlbumIds', array(10,11), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('notInAlbumIds', array(12,13), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('orXArtistId', 8)
+			->setParameter('orXArtistName', "Audioslave")
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(8)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId IS NOT NULL) AND ((art.Name = :artistName) AND (art.Name <> :notArtistName) AND (art.ArtistId < :ltArtistId) AND (art.ArtistId <= :lteArtistId) AND (art.ArtistId > :gtArtistId) AND (art.ArtistId >= :gteArtistId) AND (null IS NULL) AND (alb.AlbumId IS NOT NULL) AND (alb.Title LIKE :albumTitle) AND (alb.Title NOT LIKE :notAlbumTitle) AND (alb.AlbumId IN (:inAlbumIds)) AND (alb.AlbumId NOT IN (:notInAlbumIds)) AND ((art.Name = :orXArtistId) OR (art.Name = :orXArtistName))) AND (art.ArtistId IN (8))")
+		;
+	}
+
+	public function testAndWhereWithResetOfConditions()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->select('art')
+			->where('art.ArtistId IS NOT NULL')
+			->andWhere('art.ArtistId = 3')
+			->where('art.ArtistId IS NOT NULL')
+			->andWhere('art.ArtistId = 4')
+		;
+		$artist = $query->first();
+
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(4)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId IS NOT NULL) AND (art.ArtistId = 4) AND (art.ArtistId IN (4))")
+		;
+	}
+
+	/*** orWhere ***/
+
+	public function testOrWhereAll()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.Name = "Green Day"')
+			->orWhere('art.ArtistId = 54')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(54)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") OR (art.ArtistId = 54)")
+		;
+	}
+
+	public function testOrWhereFirst()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.Name = "Green Day"')
+			->orWhere('art.ArtistId = 54')
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(54)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.Name = \"Green Day\") OR (art.ArtistId = 54)) AND (art.ArtistId IN (54))")
+		;
+	}
+
+	public function testOrWhereWithApostrophe()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.ArtistId IS NOT NULL')
+			->orWhere('art.Name = \'Green Day\'')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.ArtistId IS NOT NULL) OR (art.Name = 'Green Day')) AND (art.ArtistId IN (1))")
+		;
+	}
+
+	public function testOrWhereWithGraveAccent()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('`art`.`Name` = "Green Day"')
+			->orWhere('`art`.`ArtistId` = 54')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`Name` = \"Green Day\") OR (`art`.`ArtistId` = 54)) AND (art.ArtistId IN (54))")
+		;
+	}
+
+	public function testOrWhereWithInteger()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.ArtistId IS NOT NULL')
+			->orWhere('art.ArtistId = 54')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.ArtistId IS NOT NULL) OR (art.ArtistId = 54)) AND (art.ArtistId IN (1))")
+		;
+	}
+
+	public function testOrWhereWithDateTime()
+	{
+		$dt = new \DateTime("2013-12-04 00:00:00");
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\InvoiceComposer');
+		$query = $composer
+			->select('inv')
+			->where('inv.InvoiceId IS NOT NULL')
+			->orWhere('inv.InvoiceDate = :invoiceDate')
+			->setParameter('invoiceDate', $dt->format("Y-m-d H:i:s"))
+		;
+		$invoice = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE ((inv.InvoiceId IS NOT NULL) OR (inv.InvoiceDate = :invoiceDate)) AND (inv.InvoiceId IN (1))")
+		;
+		$this
+			->dateTime($invoice->InvoiceDate)
+				->hasDateAndTime('2009', '01', '01', '00', '00', '00')
+		;
+	}
+
+	public function testOrWhereWithExpressionBuilder()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$qb = $composer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId IS NOT NULL')
+			->orWhere($qb->expr()->andX(
+				$qb->expr()->eq('art.Name', ':artistName'),
+				$qb->expr()->neq('art.Name', ':notArtistName'),
+				$qb->expr()->lt('art.ArtistId', ':ltArtistId'),
+				$qb->expr()->lte('art.ArtistId', ':lteArtistId'),
+				$qb->expr()->gt('art.ArtistId', ':gtArtistId'),
+				$qb->expr()->gte('art.ArtistId', ':gteArtistId'),
+				$qb->expr()->isNull('null'),
+				$qb->expr()->isNotNull('alb.AlbumId'),
+				$qb->expr()->like('alb.Title', ':albumTitle'),
+				$qb->expr()->notLike('alb.Title', ':notAlbumTitle'),
+				$qb->expr()->in('alb.AlbumId', ':inAlbumIds'),
+				$qb->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
+				$qb->expr()->orX(
+					$qb->expr()->eq('art.Name', ':orXArtistId'),
+					$qb->expr()->eq('art.Name', ':orXArtistName')
+				)
+			))
+			->setParameter('artistName', "Audioslave")
+			->setParameter('notArtistName', "BackBeat")
+			->setParameter('ltArtistId', 9)
+			->setParameter('lteArtistId', 8)
+			->setParameter('gtArtistId', 7)
+			->setParameter('gteArtistId', 8)
+			->setParameter('albumTitle', "%Exile")
+			->setParameter('notAlbumTitle', "Carnaval%")
+			->setParameter('inAlbumIds', array(10,11), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('notInAlbumIds', array(12,13), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('orXArtistId', 8)
+			->setParameter('orXArtistName', "Audioslave")
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE ((art.ArtistId IS NOT NULL) OR ((art.Name = :artistName) AND (art.Name <> :notArtistName) AND (art.ArtistId < :ltArtistId) AND (art.ArtistId <= :lteArtistId) AND (art.ArtistId > :gtArtistId) AND (art.ArtistId >= :gteArtistId) AND (null IS NULL) AND (alb.AlbumId IS NOT NULL) AND (alb.Title LIKE :albumTitle) AND (alb.Title NOT LIKE :notAlbumTitle) AND (alb.AlbumId IN (:inAlbumIds)) AND (alb.AlbumId NOT IN (:notInAlbumIds)) AND ((art.Name = :orXArtistId) OR (art.Name = :orXArtistName)))) AND (art.ArtistId IN (1))")
+		;
+	}
+
+	public function testOrWhereWithResetOfConditions()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->select('art')
+			->where('art.ArtistId IS NOT NULL')
+			->orWhere('art.ArtistId = 3')
+			->where('art.ArtistId IS NOT NULL')
+			->orWhere('art.ArtistId = 4')
+		;
+		$artist = $query->first();
+
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.ArtistId IS NOT NULL) OR (art.ArtistId = 4)) AND (art.ArtistId IN (1))")
+		;
+	}
+
+	/*** setParameter ***/
+
+	public function testSetParameter()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->where('art.Name = :artistName')
+			->setParameter('artistName', "Alice In Chains")
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = :artistName) AND (art.ArtistId IN (5))")
+		;
+		$this
+			->string($artist->Name)
+				->isEqualTo("Alice In Chains")
+		;
+	}
+
+	//	Please take a look to those tests
+	//	 - testWhereWithExpressionBuilder
+	//	 - testAndWhereWithDateTime
+
+	/*** order ***/
+
+	public function testOrderAll()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->order('art.Name', 'DESC')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(155)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art ORDER BY art.Name DESC")
+		;
+	}
+
+	public function testOrderFirst()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->order('art.Name', 'DESC')
+		;
+		$artist = $query->first();
+
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(155)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.ArtistId IN (155) ORDER BY art.Name DESC")
+		;
+	}
+
+	public function testOrderFirstWithResetOrder()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art')
+			->order('art.Name', 'DESC')
+			->order('art.ArtistId', 'DESC')
+		;
+		$artist = $query->first();
+
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(275)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.ArtistId IN (275) ORDER BY art.ArtistId DESC")
+		;
+	}
+
+	/*** addOrder ***/
+
+	public function testAddOrderAll()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId = 90')
+			->order('art.Name', 'DESC')
+			->addOrder('alb.Title', 'DESC')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+		$album   = reset($artist->albums);
+
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(90)
+		;
+		$this
+			->integer($album->AlbumId)
+				->isEqualTo(114)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE art.ArtistId = 90 ORDER BY art.Name DESC, alb.Title DESC")
+		;
+	}
+
+	public function testAddOrderFirst()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId = 90')
+			->order('art.Name', 'DESC')
+			->addOrder('alb.Title', 'DESC')
+		;
+		$artist = $query->first();
+		$album  = reset($artist->albums);
+
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(90)
+		;
+		$this
+			->integer($album->AlbumId)
+				->isEqualTo(114)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId = 90) AND (art.ArtistId IN (90)) ORDER BY art.Name DESC, alb.Title DESC")
+		;
+	}
+
+	public function testAddOrderFirstWithResetOrder()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId = 90')
+			->order('art.Name', 'DESC')
+			->addOrder('alb.Title', 'DESC')
+			->order('art.Name', 'ASC')
+			->addOrder('alb.Title', 'ASC')
+		;
+		$artist = $query->first();
+		$album  = reset($artist->albums);
+
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(90)
+		;
+		$this
+			->integer($album->AlbumId)
+				->isEqualTo(94)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId = 90) AND (art.ArtistId IN (90)) ORDER BY art.Name ASC, alb.Title ASC")
+		;
+	}
+
 
 }
 
