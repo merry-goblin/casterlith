@@ -877,17 +877,86 @@ class AbstractComposer extends atoum
 		;
 	}
 
-	/*public function testWhereWithExpressionBuilder()
+	public function testWhereWithExpressionBuilder()
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$query = $composer->select('art, alb');
-		$query->join('alb');
-		$query->where($qb->expr()->andX(
-			$qb->expr()->like('art.Name', ':trackName'),
-			$qb->expr()->eq('alb.Name', ':artistName')
-		));
-	}*/
+		$qb = $composer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where($qb->expr()->andX(
+				$qb->expr()->eq('art.Name', ':artistName'),
+				$qb->expr()->neq('art.Name', ':notArtistName'),
+				$qb->expr()->lt('art.ArtistId', ':ltArtistId'),
+				$qb->expr()->lte('art.ArtistId', ':lteArtistId'),
+				$qb->expr()->gt('art.ArtistId', ':gtArtistId'),
+				$qb->expr()->gte('art.ArtistId', ':gteArtistId'),
+				$qb->expr()->isNull('null'),
+				$qb->expr()->isNotNull('alb.AlbumId'),
+				$qb->expr()->like('alb.Title', ':albumTitle'),
+				$qb->expr()->notLike('alb.Title', ':notAlbumTitle'),
+				$qb->expr()->in('alb.AlbumId', ':inAlbumIds'),
+				$qb->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
+				$qb->expr()->orX(
+					$qb->expr()->eq('art.Name', ':orXArtistId'),
+					$qb->expr()->eq('art.Name', ':orXArtistName')
+				)
+			))
+			->setParameter('artistName', "Audioslave")
+			->setParameter('notArtistName', "BackBeat")
+			->setParameter('ltArtistId', 9)
+			->setParameter('lteArtistId', 8)
+			->setParameter('gtArtistId', 7)
+			->setParameter('gteArtistId', 8)
+			->setParameter('albumTitle', "%Exile")
+			->setParameter('notAlbumTitle', "Carnaval%")
+			->setParameter('inAlbumIds', array(10,11), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('notInAlbumIds', array(12,13), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('orXArtistId', 8)
+			->setParameter('orXArtistName', "Audioslave")
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(8)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.Name = :artistName) AND (art.Name <> :notArtistName) AND (art.ArtistId < :ltArtistId) AND (art.ArtistId <= :lteArtistId) AND (art.ArtistId > :gtArtistId) AND (art.ArtistId >= :gteArtistId) AND (null IS NULL) AND (alb.AlbumId IS NOT NULL) AND (alb.Title LIKE :albumTitle) AND (alb.Title NOT LIKE :notAlbumTitle) AND (alb.AlbumId IN (:inAlbumIds)) AND (alb.AlbumId NOT IN (:notInAlbumIds)) AND ((art.Name = :orXArtistId) OR (art.Name = :orXArtistName)) AND (art.ArtistId IN (8))")
+		;
+	}
+
+	public function testWhereWithResetOfConditions()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->select('art')
+			->where('art.ArtistId = 3')
+			->where('art.ArtistId = 4')
+		;
+		$artist = $query->first();
+
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(4)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId = 4) AND (art.ArtistId IN (4))")
+		;
+	}
+
+	/*** addWhere ***/
 
 }
 
