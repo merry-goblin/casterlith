@@ -119,7 +119,11 @@ class AbstractComposer extends atoum
 
 	public function testSelectWithOneEntityAliasAndACustomReplacer()
 	{
-		$orm = getAReadOnlyOrmInstance("_cr");
+		$replacer = "_cr";
+		$config = new \Monolith\Casterlith\Configuration($replacer);
+		$config->setSelectionReplacer($replacer);
+
+		$orm = getAReadOnlyOrmInstance($config);
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
 		$query = $composer
 			->select('art')
@@ -508,8 +512,8 @@ class AbstractComposer extends atoum
 				->isEqualTo("Luciano Pavarotti")
 		;
 		$this
-			->boolean($artist->albumsNoRecursion === \Monolith\Casterlith\Casterlith::NOT_LOADED)
-				->isEqualTo(true)
+			->variable($artist->albumsNoRecursion)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 	}
 
@@ -548,12 +552,12 @@ class AbstractComposer extends atoum
 				->isEqualTo(293)
 		;
 		$this
-			->boolean($artist->albumsNoRecursion[293]->artist === \Monolith\Casterlith\Casterlith::NOT_LOADED)
-				->isEqualTo(true)
+			->variable($artist->albumsNoRecursion[293]->artist)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 		$this
-			->boolean($artist->albums === \Monolith\Casterlith\Casterlith::NOT_LOADED)
-				->isEqualTo(true)
+			->variable($artist->albums)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 	}
 
@@ -705,8 +709,8 @@ class AbstractComposer extends atoum
 				->isEqualTo("Luciano Pavarotti")
 		;
 		$this
-			->boolean($artist->albumsNoRecursion === \Monolith\Casterlith\Casterlith::NOT_LOADED)
-				->isEqualTo(true)
+			->variable($artist->albumsNoRecursion)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 	}
 
@@ -745,12 +749,12 @@ class AbstractComposer extends atoum
 				->isEqualTo(293)
 		;
 		$this
-			->boolean($artist->albumsNoRecursion[293]->artist === \Monolith\Casterlith\Casterlith::NOT_LOADED)
-				->isEqualTo(true)
+			->variable($artist->albumsNoRecursion[293]->artist)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 		$this
-			->boolean($artist->albums === \Monolith\Casterlith\Casterlith::NOT_LOADED)
-				->isEqualTo(true)
+			->variable($artist->albums)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 	}
 
@@ -833,6 +837,58 @@ class AbstractComposer extends atoum
 					$query->first();
 				}
 			)
+		;
+	}
+
+	public function testLeftJoinWithOneArtistWithoutAlbum()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->leftJoin('art', 'alb', 'albums')
+			->where('art.ArtistId = :artistId')
+			->setParameter('artistId', 26)
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->array($artist->albums)
+			 	->hasSize(0)
+		;
+		$this
+			->variable($artist->albums)
+			 	->isNotIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
+		;
+	}
+
+	public function testLeftJoinWithOneEmployeeWithoutBoss()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\EmployeeComposer');
+		$query = $composer
+			->select('sub', 'sup')
+			->leftJoin('sub', 'sup', 'reportsTo')
+			->where('sub.EmployeeId = :employeeId')
+			->setParameter('employeeId', 1)
+		;
+		$employee = $query->first();
+
+		$this
+			->object($employee)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\employeeEntity')
+		;
+		$this
+			->variable($employee->reportsTo)
+			 	->isNull()
+		;
+		$this
+			->variable($employee->reportsTo)
+			 	->isNotIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
 		;
 	}
 
@@ -1633,6 +1689,81 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	/*** first ***/
+
+	public function testFirstWithAutoSelection()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(true);
+		$config->setExceptionMultipleResultOnFirst(true); // We except this configuration to be useless with autoSelection equal to true
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId <= 10')
+		;
+		$artist = $query->first();
+		$album  = reset($artist->albums);
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(1)
+		;
+	}
+
+	public function testFirstWithoutAutoSelection()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(false);
+		$config->setExceptionMultipleResultOnFirst(false);
+		
+		$orm = getAReadOnlyOrmInstance($config);
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId <= 10')
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+			 	->isEqualTo(1)
+		;
+	}
+
+	public function testFirstWithExceptionMultipleResultOnFirst()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(false);
+		$config->setExceptionMultipleResultOnFirst(true);
+		
+		$orm = getAReadOnlyOrmInstance($config);
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.ArtistId <= 10')
+		;
+
+		$this
+			->exception(
+				function() use($query) {
+					$artist = $query->first();
+				}
+			)
+		;
+	}
 
 }
 
@@ -1646,6 +1777,11 @@ class ArtistComposer extends \Monolith\Casterlith\Composer\AbstractComposer impl
 class InvoiceComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
 {
 	protected static $mapperName  = '\\Monolith\\Casterlith\\tests\\units\\Composer\\InvoiceMapper';
+}
+
+class EmployeeComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
+{
+	protected static $mapperName  = '\\Monolith\\Casterlith\\tests\\units\\Composer\\EmployeeMapper';
 }
 
 class ArtistMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \Monolith\Casterlith\Mapper\MapperInterface
@@ -1720,7 +1856,6 @@ class AlbumMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements 
 	{
 		if (is_null(self::$relations)) {
 			self::$relations = array(
-				//'tracks' => new \Monolith\Casterlith\Relations\OneToMany(new TrackMapper(), 'album', 'track', '`album`.AlbumId = `track`.AlbumId', 'album'),
 				'artist' => new \Monolith\Casterlith\Relations\ManyToOne(new \Monolith\Casterlith\tests\units\Composer\ArtistMapper(), 'album', 'artist', '`album`.ArtistId = `artist`.ArtistId', 'albums'),
 			);
 		}
@@ -1774,6 +1909,59 @@ class InvoiceMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implement
 	}
 }
 
+class EmployeeMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \Monolith\Casterlith\Mapper\MapperInterface
+{
+	protected static $table      = 'employees';
+	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\EmployeeEntity';
+	protected static $fields     = null;
+	protected static $relations  = null;
+
+	public static function getPrimaryKey()
+	{
+		return 'EmployeeId';
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getFields()
+	{
+		if (is_null(self::$fields)) {
+			self::$fields = array(
+				'EmployeeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+				'FirstName'   => array('type' => 'string'),
+				'LastName'    => array('type' => 'string'),
+				'Title'       => array('type' => 'string'),
+				'ReportsTo'   => array('type' => 'string'),
+				'BirthDate'   => array('type' => 'string'),
+				'HireDate'    => array('type' => 'string'),
+				'Address'     => array('type' => 'string'),
+				'City'        => array('type' => 'string'),
+				'State'       => array('type' => 'string'),
+				'Country'     => array('type' => 'string'),
+				'PostalCode'  => array('type' => 'string'),
+				'Phone'       => array('type' => 'string'),
+				'Fax'         => array('type' => 'string'),
+				'Email'       => array('type' => 'string'),
+			);
+		}
+
+		return self::$fields;
+	}
+
+	public static function getRelations()
+	{
+		if (is_null(self::$relations)) {
+			self::$relations = array(
+				'reportsTo'     => new \Monolith\Casterlith\Relations\ManyToOne(new \Monolith\Casterlith\tests\units\Composer\EmployeeMapper(), 'sub', 'sup', '`sub`.ReportsTo = `sup`.EmployeeId', 'isReportedBy'),
+				'isReportedBy'  => new \Monolith\Casterlith\Relations\OneToMany(new \Monolith\Casterlith\tests\units\Composer\EmployeeMapper(), 'sup', 'sub', '`sup`.EmployeeId = `sub`.ReportsTo', 'reportsTo'),
+			);
+		}
+
+		return self::$relations;
+	}
+}
+
 class ArtistEntity implements \Monolith\Casterlith\Entity\EntityInterface
 {
 	public $ArtistId  = null;
@@ -1818,6 +2006,34 @@ class InvoiceEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public function getPrimaryValue()
 	{
 		return $this->InvoiceId;
+	}
+}
+
+class EmployeeEntity implements \Monolith\Casterlith\Entity\EntityInterface
+{
+	public $EmployeeId  = null;
+	public $FirstName   = null;
+	public $LastName    = null;
+	public $Title       = null;
+	public $ReportsTo   = null;
+	public $BirthDate   = null;
+	public $HireDate    = null;
+	public $Address     = null;
+	public $City        = null;
+	public $State       = null;
+	public $Country     = null;
+	public $PostalCode  = null;
+	public $Phone       = null;
+	public $Fax         = null;
+	public $Email       = null;
+
+	public $customers     = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+	public $reportsTo     = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+	public $isReportedBy  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+
+	public function getPrimaryValue()
+	{
+		return $this->EmployeeId;
 	}
 }
 

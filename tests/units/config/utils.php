@@ -8,15 +8,16 @@ function cleanSqlLiteDB()
 	}
 }
 
-function getAReadOnlyOrmInstance($replacer = "cl")
+function getAReadOnlyOrmInstance(\Monolith\Casterlith\Configuration $config = null)
 {
 	$params = array(
 		'driver'  => 'pdo_sqlite',
 		'path'    => __DIR__."/sqllite-unit-tests-readonly.db",
 		'memory'  => false,
 	);
-	$config = new \Monolith\Casterlith\Configuration($replacer);
-	$config->setSelectionReplacer($replacer);
+	if (is_null($config)) {
+		$config = new \Monolith\Casterlith\Configuration($replacer);
+	}
 
 	$casterlith = new \Monolith\Casterlith\Casterlith($params, $config);
 

@@ -70,4 +70,54 @@ class Configuration extends atoum
 				->isEqualTo('cl')
 		;
 	}
+
+	/*** setFirstAutoSelection ***/
+
+	public function testSetFirstAutoSelection()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection();
+
+		$this
+			->boolean($config->getFirstAutoSelection())
+				->isEqualTo(true)
+		;
+	}
+
+	/*** getFirstAutoSelection ***/
+
+	public function testGetFirstAutoSelection()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$this
+			->boolean($config->getFirstAutoSelection())
+				->isEqualTo(true)
+		;
+	}
+
+	/*** setExceptionMultipleResultOnFirst ***/
+
+	public function testSetExceptionMultipleResultOnFirst()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setExceptionMultipleResultOnFirst();
+
+		$this
+			->boolean($config->getExceptionMultipleResultOnFirst())
+				->isEqualTo(false)
+		;
+	}
+
+	/*** getFirstAutoSelection ***/
+
+	public function testGetExceptionMultipleResultOnFirst()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+
+		$this
+			->boolean($config->getExceptionMultipleResultOnFirst())
+				->isEqualTo(false)
+		;
+	}
+
 }

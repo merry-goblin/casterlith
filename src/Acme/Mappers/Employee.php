@@ -56,7 +56,7 @@ class Employee extends AbstractMapper implements MapperInterface
 		if (is_null(self::$relations)) {
 			self::$relations = array(
 				'customers'     => new OneToMany(new CustomerMapper(), 'employee', 'customer', '`employee`.EmployeeId = `customer`.SupportRepId', 'employee'),
-				'reportsTo'     => new OneToMany(new EmployeeMapper(), 'sub', 'sup', '`sub`.ReportsTo = `sup`.EmployeeId', 'isReportedBy'),
+				'reportsTo'     => new ManyToOne(new EmployeeMapper(), 'sub', 'sup', '`sub`.ReportsTo = `sup`.EmployeeId', 'isReportedBy'),
 				'isReportedBy'  => new OneToMany(new EmployeeMapper(), 'sup', 'sub', '`sup`.EmployeeId = `sub`.ReportsTo', 'reportsTo'),
 			);
 		}
