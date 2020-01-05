@@ -1536,6 +1536,70 @@ class AbstractComposer extends atoum
 	//	 - testWhereWithExpressionBuilder
 	//	 - testAndWhereWithDateTime
 
+	/*** groupBy ***/
+
+	public function testGroupBy()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumComposer');
+		$query = $composer
+			->select('alb', 'art')
+			->join('alb', 'art', 'artist')
+			->groupBy('alb.ArtistId')
+		;
+		$albums = $query->all();
+		$album  = reset($albums);
+
+		$this
+			->array($albums)
+				->hasSize(204)
+		;
+		$this
+			->object($album)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumEntity')
+		;
+		$this
+			->object($album->artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->array($album->artist->albums)
+				->hasSize(1) // Instead of 2 because of the groupBy
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.ArtistId")
+		;
+	}
+
+	public function testGroupByWithRawSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumComposer');
+		$query = $composer
+			->selectAsRaw('alb', 'alb.ArtistId, count(alb.ArtistId) as nb')
+			->groupBy('alb.ArtistId')
+		;
+		$result = $query->first();
+
+		$this
+			->object($result)
+				->isInstanceOf('\\stdClass')
+		;
+		$this
+			->string($result->ArtistId)
+				->isEqualTo(1)
+		;
+		$this
+			->string($result->nb)
+				->isEqualTo(2)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY alb.ArtistId")
+		;
+	}
+
 	/*** order ***/
 
 	public function testOrderAll()
@@ -1689,6 +1753,107 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	/*** limit ***/
+
+	public function testLimit()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(true);
+		$config->setExceptionMultipleResultOnFirst(true); // We except this configuration to be useless with autoSelection equal to true
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->order('art.ArtistId', 'DESC')
+		;
+		$artists = $query->limit(0, 10);
+		$artist  = reset($artists);
+
+		$this
+			->array($artists)
+				->hasSize(10)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(275)
+		;
+	}
+
+	public function testLimitWithZeroToEveryParameters()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(true);
+		$config->setExceptionMultipleResultOnFirst(true); // We except this configuration to be useless with autoSelection equal to true
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->order('art.ArtistId', 'DESC')
+		;
+
+		$this
+			->exception(
+				function() use($query) {
+					$artists = $query->limit(0, 0);
+				}
+			)
+		;
+	}
+
+	public function testLimitWithInvalidLimitParameter()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(true);
+		$config->setExceptionMultipleResultOnFirst(true); // We except this configuration to be useless with autoSelection equal to true
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->order('art.ArtistId', 'DESC')
+		;
+
+		$this
+			->exception(
+				function() use($query) {
+					$artists = $query->limit(0, -10);
+				}
+			)
+		;
+	}
+
+	public function testLimitWithInvalidOffsetParameter()
+	{
+		$config = new \Monolith\Casterlith\Configuration();
+		$config->setFirstAutoSelection(true);
+		$config->setExceptionMultipleResultOnFirst(true); // We except this configuration to be useless with autoSelection equal to true
+
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->order('art.ArtistId', 'DESC')
+		;
+
+		$this
+			->exception(
+				function() use($query) {
+					$artists = $query->limit(-10, 10);
+				}
+			)
+		;
+	}
+
 	/*** first ***/
 
 	public function testFirstWithAutoSelection()
@@ -1772,6 +1937,11 @@ class AbstractComposer extends atoum
 class ArtistComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
 {
 	protected static $mapperName  = '\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistMapper';
+}
+
+class AlbumComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
+{
+	protected static $mapperName  = '\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumMapper';
 }
 
 class InvoiceComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
