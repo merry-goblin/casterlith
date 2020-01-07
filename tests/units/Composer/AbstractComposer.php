@@ -1934,6 +1934,77 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testAndHavingWithReset()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.ArtistId')
+			->having('COUNT(alb.AlbumId) > 2')
+			->andHaving('COUNT(alb.AlbumId) > 3')
+			->having('COUNT(alb.AlbumId) > 2')
+			->andHaving('COUNT(alb.AlbumId) > 4')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->array($artists)
+				->hasSize(7)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(22)
+		;
+		$this
+			->array($artist->albums)
+				->hasSize(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) AND (COUNT(alb.AlbumId) > 4)")
+		;
+	}
+
+	public function testAndHavingWithResetAndRawSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->selectAsRaw('art', 'alb.ArtistId, COUNT(alb.AlbumId) as nb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.ArtistId')
+			->having('COUNT(alb.AlbumId) > 2')
+			->andHaving('COUNT(alb.AlbumId) > 3')
+			->having('COUNT(alb.AlbumId) > 2')
+			->andHaving('COUNT(alb.AlbumId) > 4')
+		;
+		$result = $query->first();
+
+		$this
+			->object($result)
+				->isInstanceOf('\\stdClass')
+		;
+		$this
+			->string($result->ArtistId)
+				->isEqualTo("22")
+		;
+		$this
+			->string($result->nb)
+				->isEqualTo("14")
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) AND (COUNT(alb.AlbumId) > 4)")
+		;
+	}
+
 	/*** orHaving ***/
 
 	public function testOrHaving()
@@ -2000,6 +2071,77 @@ class AbstractComposer extends atoum
 		$this
 			->string($query->getSQL())
 				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 3)")
+		;
+	}
+
+	public function testOrHavingWithReset()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.ArtistId')
+			->having('COUNT(alb.AlbumId) > 2')
+			->orHaving('COUNT(alb.AlbumId) > 3')
+			->having('COUNT(alb.AlbumId) > 2')
+			->orHaving('COUNT(alb.AlbumId) > 4')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->array($artists)
+				->hasSize(26)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->integer($artist->ArtistId)
+				->isEqualTo(8)
+		;
+		$this
+			->array($artist->albums)
+				->hasSize(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 4)")
+		;
+	}
+
+	public function testOrHavingWithResetAndRawSelection()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->selectAsRaw('art', 'alb.ArtistId, COUNT(alb.AlbumId) as nb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.ArtistId')
+			->having('COUNT(alb.AlbumId) > 2')
+			->orHaving('COUNT(alb.AlbumId) > 3')
+			->having('COUNT(alb.AlbumId) > 2')
+			->orHaving('COUNT(alb.AlbumId) > 4')
+		;
+		$result = $query->first();
+
+		$this
+			->object($result)
+				->isInstanceOf('\\stdClass')
+		;
+		$this
+			->string($result->ArtistId)
+				->isEqualTo("8")
+		;
+		$this
+			->string($result->nb)
+				->isEqualTo("3")
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 4)")
 		;
 	}
 
