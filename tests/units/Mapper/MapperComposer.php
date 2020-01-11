@@ -23,6 +23,9 @@ class AbstractMapper extends atoum
 		;
 	}
 
+	/**
+	 * https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/reference/types.html#mapping-matrix
+	 */
 	public function testTypesFromSelection()
 	{
 		$orm = getAReadOnlyOrmInstance("types");
@@ -38,7 +41,7 @@ class AbstractMapper extends atoum
 		;
 		$this
 			->variable($type->aString)
-				->isIdenticalTo("douze")
+				->isIdenticalTo("twelve")
 		;
 		$this
 			->resource($type->aBlob)
