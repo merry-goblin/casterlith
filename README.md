@@ -54,7 +54,7 @@ $params = array(
 	'memory'    => false,
 );
 $config = new \Monolith\Casterlith\Configuration();
-$casterlith = new \Monolith\Casterlith\Casterlith();
+$casterlith = new \Monolith\Casterlith\Casterlith($params, $config);
 ```
 
 ### Sample (SELECT)

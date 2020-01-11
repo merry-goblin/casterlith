@@ -123,7 +123,7 @@ class AbstractComposer extends atoum
 		$config = new \Monolith\Casterlith\Configuration($replacer);
 		$config->setSelectionReplacer($replacer);
 
-		$orm = getAReadOnlyOrmInstance($config);
+		$orm = getAReadOnlyOrmInstance("unit-tests", $config);
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
 		$query = $composer
 			->select('art')
@@ -2431,7 +2431,7 @@ class AbstractComposer extends atoum
 		$config->setFirstAutoSelection(false);
 		$config->setExceptionMultipleResultOnFirst(false);
 		
-		$orm = getAReadOnlyOrmInstance($config);
+		$orm = getAReadOnlyOrmInstance("unit-tests", $config);
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
 		$query = $composer
 			->select('art', 'alb')
@@ -2456,7 +2456,7 @@ class AbstractComposer extends atoum
 		$config->setFirstAutoSelection(false);
 		$config->setExceptionMultipleResultOnFirst(true);
 		
-		$orm = getAReadOnlyOrmInstance($config);
+		$orm = getAReadOnlyOrmInstance("unit-tests", $config);
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
 		$query = $composer
 			->select('art', 'alb')
