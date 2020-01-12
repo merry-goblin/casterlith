@@ -23,6 +23,84 @@ class AbstractMapper extends atoum
 		;
 	}
 
+	/*** getTable ***/
+
+	public function testGetTable()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeComposer');
+		$mapper = $composer->getMapper();
+
+		$this
+			->variable($mapper->getTable())
+				->isIdenticalTo("types")
+		;
+	}
+
+	/*** getEntity ***/
+
+	public function testGetEntity()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeComposer');
+		$mapper = $composer->getMapper();
+
+		$this
+			->variable($mapper->getEntity())
+				->isIdenticalTo('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeEntity')
+		;
+	}
+
+	/*** getRelation ***/
+
+	public function testGetRelationWithExistingName()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeComposer');
+		$mapper = $composer->getMapper();
+
+		$this
+			->object($mapper->getRelation('children'))
+				->isInstanceOf('\\Monolith\\Casterlith\\Relations\\OneToMany')
+		;
+		$this
+			->object($mapper->getRelation('parent'))
+				->isInstanceOf('\\Monolith\\Casterlith\\Relations\\ManyToOne')
+		;
+	}
+
+	public function testGetRelationWithoutName()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeComposer');
+		$mapper = $composer->getMapper();
+
+		$this
+			->exception(
+				function() use($mapper) {
+					$relation = $mapper->getRelation();
+				}
+			)
+		;
+	}
+
+	public function testGetRelationWithNonExistingName()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeComposer');
+		$mapper = $composer->getMapper();
+
+		$this
+			->exception(
+				function() use($mapper) {
+					$relation = $mapper->getRelation('monkeys');
+				}
+			)
+		;
+	}
+
+	/*** Field's types ***/
+
 	/**
 	 * https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/reference/types.html#mapping-matrix
 	 */
@@ -31,7 +109,7 @@ class AbstractMapper extends atoum
 		$orm = getAReadOnlyOrmInstance("types");
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeComposer');
 		$query = $composer
-			->select('t')
+			->select('type')
 		;
 		$type = $query->first();
 
@@ -103,6 +181,7 @@ class TypeMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \
 				'aNumeric'   => array('type' => 'decimal'),
 				'aDate'      => array('type' => 'date'),
 				'aDateTime'  => array('type' => 'datetime'),
+				'parentId'   => array('type' => 'integer'),
 			);
 		}
 
@@ -112,7 +191,10 @@ class TypeMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \
 	public static function getRelations()
 	{
 		if (is_null(self::$relations)) {
-			self::$relations = array();
+			self::$relations = array(
+				'parent'    => new \Monolith\Casterlith\Relations\ManyToOne(new \Monolith\Casterlith\tests\units\Mapper\TypeMapper(), 'child', 'parent', '`child`.parentId = `parent`.id', 'children'),
+				'children'  => new \Monolith\Casterlith\Relations\OneToMany(new \Monolith\Casterlith\tests\units\Mapper\TypeMapper(), 'parent', 'child', '`child`.parentId = `parent`.id', 'parent'),
+			);
 		}
 
 		return self::$relations;
@@ -129,6 +211,9 @@ class TypeEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public $aNumeric   = null;
 	public $aDate      = null;
 	public $aDateTime  = null;
+
+	public $parent   = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+	public $children = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 
 	public function getPrimaryValue()
 	{
