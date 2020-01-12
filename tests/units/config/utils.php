@@ -35,3 +35,12 @@ function getAReadOnlyOrmInstance($name = "unit-tests", \Monolith\Casterlith\Conf
 
 	return $casterlith;
 }
+
+function getPrivateValue($instance, $propertyName)
+{
+	$reflectionProperty = new \ReflectionProperty(get_class($instance), $propertyName);
+	$reflectionProperty->setAccessible(true);
+	$value = $reflectionProperty->getValue($instance);
+
+	return $value;
+}
