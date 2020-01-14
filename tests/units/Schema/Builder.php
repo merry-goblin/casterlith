@@ -205,6 +205,472 @@ class Builder extends atoum
 
 		$schemaBuilder->select("album");
 		$schemaBuilder->from("artist", $mapper);
+
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(1)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(1)
+				->hasKey("album")
+		;
+		$this
+			->object($selectionList['album'])
+				->isInstanceOf('\\Monolith\\Casterlith\\Schema\\Selection')
+		;
+		$this
+			->array($jointList)
+				->hasSize(0)
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
+	}
+
+	public function testFromWithoutSelectFirst()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->from("artist", $mapper);
+		
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(0)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(0)
+		;
+		$this
+			->array($jointList)
+				->hasSize(0)
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
+	}
+
+	/*** join ***/
+
+	public function testJoin()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->from("artist", $mapper);
+		$schemaBuilder->join("artist", "album", "albums");
+
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(1)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(2)
+				->hasKeys(array("artist","album"))
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->object($selectionList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\Schema\\Selection')
+		;
+		$this
+			->array($jointList)
+				->hasSize(2)
+				->hasKeys(array("artist", "album"))
+		;
+		$this
+			->array($jointList['artist'])
+				->hasSize(1)
+				->hasKey("albums")
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
+	}
+
+	public function testJoinWithoutAlias()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->from("artist", $mapper);
+
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join("", "album", "albums");
+				}
+			)
+		;
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join("artist", "", "albums");
+				}
+			)
+		;
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join("artist", "album", "s");
+				}
+			)
+		;
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join(null, "album", "albums");
+				}
+			)
+		;
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join("artist", null, "albums");
+				}
+			)
+		;
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join("artist", "album", null);
+				}
+			)
+		;
+	}
+
+	public function testJoinWithTwoCalls()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->select("album");
+		$schemaBuilder->select("albumNoRecursion");
+		$schemaBuilder->from("artist", $mapper);
+		$schemaBuilder->join("artist", "album", "albums");
+		$schemaBuilder->join("artist", "albumNoRecursion", "albumsNoRecursion");
+
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(3)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(3)
+				->hasKeys(array("artist","album","albumNoRecursion"))
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(3)
+				->hasKeys(array("artist","album","albumNoRecursion"))
+		;
+		$this
+			->object($selectionList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\Schema\\Selection')
+		;
+		$this
+			->array($jointList)
+				->hasSize(2)
+				->hasKeys(array("artist", "album"))
+		;
+		$this
+			->array($jointList['artist'])
+				->hasSize(2)
+				->hasKeys(array("albums", "albumsNoRecursion"))
+		;
+		$this
+			->array($jointList['album'])
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
+	}
+
+	public function testJoinWithTwoDifferentRelationsButTheSameEntity()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->select("album");
+		$schemaBuilder->from("artist", $mapper);
+		$schemaBuilder->join("artist", "album", "albums");
+		$schemaBuilder->join("artist", "album", "albumsNoRecursion");
+
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(2)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(2)
+				->hasKeys(array("artist","album"))
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(2)
+				->hasKeys(array("artist","album"))
+		;
+		$this
+			->object($selectionList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\Schema\\Selection')
+		;
+		$this
+			->array($jointList)
+				->hasSize(2)
+				->hasKeys(array("artist", "album"))
+		;
+		$this
+			->array($jointList['artist'])
+				->hasSize(2)
+				->hasKeys(array("albums", "albumsNoRecursion"))
+		;
+		$this
+			->array($jointList['album'])
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
+	}
+
+	public function testJoinWrongRelationName()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->from("artist", $mapper);
+
+		$this
+			->exception(
+				function() use($schemaBuilder) {
+					$schemaBuilder->join("artist", "album", "wrongRelationName");
+				}
+			)
+		;
+	}
+
+	public function testJoinWithTwoCallsOfTheSameRelation()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->from("artist", $mapper);
+		$schemaBuilder->join("artist", "album", "albums");
+		$schemaBuilder->join("artist", "album", "albums");
+
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(1)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(2)
+				->hasKeys(array("artist","album"))
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->object($selectionList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\Schema\\Selection')
+		;
+		$this
+			->array($jointList)
+				->hasSize(2)
+				->hasKeys(array("artist", "album"))
+		;
+		$this
+			->array($jointList['artist'])
+				->hasSize(1)
+				->hasKey("albums")
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
+	}
+
+	public function testJoinWithTwoCallsOfTheSameRelationButDifferentEntities()
+	{
+		$orm = getAReadOnlyOrmInstance("types");
+		$queryBuilder = $orm->getQueryBuilder();
+		$selectionReplacer = "cl";
+		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
+		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
+
+		$schemaBuilder->select("artist");
+		$schemaBuilder->select("album");
+		$schemaBuilder->select("album2");
+		$schemaBuilder->from("artist", $mapper);
+		$schemaBuilder->join("artist", "album", "albums");
+		$schemaBuilder->join("artist", "album2", "albums");
+
+		$num           = getPrivateValue($schemaBuilder, 'num');
+		$mapperList    = getPrivateValue($schemaBuilder, 'mapperList');
+		$selectionList = getPrivateValue($schemaBuilder, 'selectionList');
+		$jointList     = getPrivateValue($schemaBuilder, 'jointList');
+		$rootAlias     = getPrivateValue($schemaBuilder, 'rootAlias');
+
+		$this
+			->variable($num)
+				->isIdenticalTo(3)
+		;
+		$this
+			->array($mapperList)
+				->hasSize(3)
+				->hasKeys(array("artist","album","album2"))
+		;
+		$this
+			->object($mapperList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistMapper')
+		;
+		$this
+			->array($selectionList)
+				->hasSize(3)
+				->hasKeys(array("artist","album","album2"))
+		;
+		$this
+			->object($selectionList['artist'])
+				->isInstanceOf('\\Monolith\\Casterlith\\Schema\\Selection')
+		;
+		$this
+			->array($jointList)
+				->hasSize(3)
+				->hasKeys(array("artist","album","album2"))
+		;
+		$this
+			->array($jointList['artist'])
+				->hasSize(1)
+				->hasKey("albums")
+		;
+		$this
+			->array($jointList['album'])
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->array($jointList['album2'])
+				->hasSize(1)
+				->hasKey("artist")
+		;
+		$this
+			->variable($rootAlias)
+				->isIdenticalTo("artist")
+		;
 	}
 
 }

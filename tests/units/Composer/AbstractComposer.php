@@ -643,6 +643,64 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testJoinWithAllArtistsAndBothRecursionAndNoRecursion()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
+		$query = $composer
+			->select('art', 'alb', 'alb2')
+			->join('art', 'alb', 'albums')
+			->join('art', 'alb2', 'albumsNoRecursion')
+		;
+		$artists = $query->all();
+		$artist  = $artists[227];
+
+		$artist->albumsNoRecursion[293];
+
+		$this
+			->array($artists)
+				->hasSize(204)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->array($artist->albums)
+			 	->hasSize(1)
+			 	->hasKeys(array(293))
+		;
+		$this
+			->array($artist->albumsNoRecursion)
+			 	->hasSize(1)
+			 	->hasKeys(array(293))
+		;
+		$this
+			->string($artist->albums[293]->Title)
+				->isEqualTo("Pavarotti's Opera Made Easy")
+		;
+		$this
+			->string($artist->albumsNoRecursion[293]->Title)
+				->isEqualTo("Pavarotti's Opera Made Easy")
+		;
+		$this
+			->integer($artist->albums[293]->AlbumId)
+				->isEqualTo(293)
+		;
+		$this
+			->integer($artist->albumsNoRecursion[293]->AlbumId)
+				->isEqualTo(293)
+		;
+		$this
+			->object($artist->albums[293]->artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity')
+		;
+		$this
+			->variable($artist->albumsNoRecursion[293]->artist)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
+		;
+	}
+
 	/*** leftJoin ***/
 
 	public function testLeftJoinWithOneArtist()
