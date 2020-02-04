@@ -13,7 +13,7 @@ $config->setSelectionReplacer("_cl"); // The replacer insures that table's alias
 
 $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
 $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
-$qb             = $trackComposer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+$qb             = $trackComposer->getDBALQueryBuilder();                  // DBAL's query builder for expressions
 
 $tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")

@@ -67,12 +67,12 @@ class Casterlith extends atoum
 		;
 	}
 
-	public function testGetQueryBuilder()
+	public function testGetDBALQueryBuilder()
 	{
 		$orm = getAReadOnlyOrmInstance();
 
 		$this
-			->object($queryBuilder = $orm->getQueryBuilder())
+			->object($queryBuilder = $orm->getDBALQueryBuilder())
 				->isInstanceOf('\\Doctrine\\DBAL\\Query\\QueryBuilder')
 		;
 	}

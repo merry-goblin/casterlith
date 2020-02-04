@@ -1072,7 +1072,7 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$qb = $composer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+		$qb = $composer->getDBALQueryBuilder(); 
 
 		$query = $composer
 			->select('art', 'alb')
@@ -1279,7 +1279,7 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$qb = $composer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+		$qb = $composer->getDBALQueryBuilder();
 
 		$query = $composer
 			->select('art', 'alb')
@@ -1489,7 +1489,7 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$qb = $composer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+		$qb = $composer->getDBALQueryBuilder();
 
 		$query = $composer
 			->select('art', 'alb')

@@ -15,7 +15,7 @@ class Builder extends atoum
 	public function testContructor()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder      = $orm->getQueryBuilder();
+		$queryBuilder      = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 
@@ -30,7 +30,7 @@ class Builder extends atoum
 	public function testSelect()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 
@@ -57,7 +57,7 @@ class Builder extends atoum
 	public function testSelectWithTwoCalls()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 
@@ -85,7 +85,7 @@ class Builder extends atoum
 	public function testSelectWithTwoIdenticalCalls()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 
@@ -103,7 +103,7 @@ class Builder extends atoum
 	public function testSelectWithEmpty()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 
@@ -128,7 +128,7 @@ class Builder extends atoum
 	public function testFrom()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -177,7 +177,7 @@ class Builder extends atoum
 	public function testFromWithTwoCalls()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -198,7 +198,7 @@ class Builder extends atoum
 	public function testFromWithNonExistingAliasInSelection()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -247,7 +247,7 @@ class Builder extends atoum
 	public function testFromWithoutSelectFirst()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -292,7 +292,7 @@ class Builder extends atoum
 	public function testJoin()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -348,7 +348,7 @@ class Builder extends atoum
 	public function testJoinWithoutAlias()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -403,7 +403,7 @@ class Builder extends atoum
 	public function testJoinWithTwoCalls()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -467,7 +467,7 @@ class Builder extends atoum
 	public function testJoinWithTwoDifferentRelationsButTheSameEntity()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -530,7 +530,7 @@ class Builder extends atoum
 	public function testJoinWrongRelationName()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -550,7 +550,7 @@ class Builder extends atoum
 	public function testJoinWithTwoCallsOfTheSameRelation()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -607,7 +607,7 @@ class Builder extends atoum
 	public function testJoinWithTwoCallsOfTheSameRelationButDifferentEntities()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -678,7 +678,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelection()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -695,7 +695,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelectionWithAnEmptyReplacer()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -712,7 +712,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelectionWithDifferentSelectAndFromAliases()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -732,7 +732,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelectionWithoutCallingFrom()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -751,7 +751,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelectionWithAnEmptyAlias()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -778,7 +778,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelectionWithJoin()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -803,7 +803,7 @@ class Builder extends atoum
 	public function testGetAUniqueSelectionFromRaw()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -822,7 +822,7 @@ class Builder extends atoum
 	public function testBuildFirst()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -864,7 +864,7 @@ class Builder extends atoum
 	public function testBuildFirstWithJoin()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -909,7 +909,7 @@ class Builder extends atoum
 	public function testBuildFirstWithTwoEntities()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -965,7 +965,7 @@ class Builder extends atoum
 	public function testBuildFirstWithGetRawSelection()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -992,7 +992,7 @@ class Builder extends atoum
 	public function testBuildFirstWithNoRecursion()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1048,7 +1048,7 @@ class Builder extends atoum
 	public function testBuildFirstWithBothRecursionAndNoRecursion()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1083,7 +1083,7 @@ class Builder extends atoum
 	public function testBuildFirstWithBothRecursionAndNoRecursionAndDifferentAliasFromSameTable()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1157,7 +1157,7 @@ class Builder extends atoum
 	public function testBuildFirstWithBothRecursionAndNoRecursionAndDifferentAliasFromSameTableAndSameData()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1229,7 +1229,7 @@ class Builder extends atoum
 	public function testBuildAll()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1277,7 +1277,7 @@ class Builder extends atoum
 	public function testBuildAllWithJoin()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1328,7 +1328,7 @@ class Builder extends atoum
 	public function testBuildAllWithTwoEntities()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1390,7 +1390,7 @@ class Builder extends atoum
 	public function testBuildAllWithGetRawSelection()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$mapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1417,7 +1417,7 @@ class Builder extends atoum
 	public function testBuildAllWithNoRecursion()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1479,7 +1479,7 @@ class Builder extends atoum
 	public function testBuildAllWithBothRecursionAndNoRecursionAndDifferentAliasFromSameTable()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1559,7 +1559,7 @@ class Builder extends atoum
 	public function testBuildAllWithBothRecursionAndNoRecursionAndDifferentAliasFromSameTableAndSameData()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1637,7 +1637,7 @@ class Builder extends atoum
 	public function testBuildFirstAsRaw()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1666,7 +1666,7 @@ class Builder extends atoum
 	public function testBuildFirstAsRawWithJoin()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1698,7 +1698,7 @@ class Builder extends atoum
 	public function testBuildFirstAsRawWithTwoSelections()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1733,7 +1733,7 @@ class Builder extends atoum
 	public function testBuildFirstAsRawWithTwoSelectionsInASingleSelect()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$albumMapper = new \Monolith\Casterlith\tests\units\Schema\AlbumMapper();
@@ -1768,7 +1768,7 @@ class Builder extends atoum
 	public function testBuildAllAsRaw()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1802,7 +1802,7 @@ class Builder extends atoum
 	public function testBuildAllAsRawWithJoin()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1839,7 +1839,7 @@ class Builder extends atoum
 	public function testBuildAllAsRawWithTwoSelections()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1879,7 +1879,7 @@ class Builder extends atoum
 	public function testBuildAllAsRawWithTwoSelectionsInASingleSelect()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$albumMapper = new \Monolith\Casterlith\tests\units\Schema\AlbumMapper();
@@ -1919,7 +1919,7 @@ class Builder extends atoum
 	public function testGetRootAlias()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 		$artistMapper = new \Monolith\Casterlith\tests\units\Schema\ArtistMapper();
@@ -1937,7 +1937,7 @@ class Builder extends atoum
 	public function testGetRootAliasWithoutCallingFromFirst()
 	{
 		$orm = getAReadOnlyOrmInstance();
-		$queryBuilder = $orm->getQueryBuilder();
+		$queryBuilder = $orm->getDBALQueryBuilder();
 		$selectionReplacer = "cl";
 		$schemaBuilder = new \Monolith\Casterlith\Schema\Builder($queryBuilder, $selectionReplacer);
 

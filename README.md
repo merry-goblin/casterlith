@@ -80,7 +80,7 @@ $config->setSelectionReplacer("_cl"); // The replacer insures that table's alias
 
 $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
 $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
-$qb             = $trackComposer->getQueryBuilder();                      // DBAL's query builder can be accessed from Casterlith (a new instance) and from a Composer (same one as the one used by the composer)
+$qb             = $trackComposer->getDBALQueryBuilder();                  // DBAL's query builder for expressions
 
 $tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
@@ -216,10 +216,10 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 
 #### Monolith\Casterlith\Casterlith
 
-- **getComposer(className) :**                       returns a specific composer instance
-- **getQueryBuilder() :**                            returns a new DBAL query builder
-- **getDBALConnection() :**                          returns a new DBAL connection (raw sql queries with DBAL wrapping)
-- **getPDOConnection() :**                           returns a new PDO connection (raw sql queries)
+- **getComposer(className) :**  returns a specific composer instance
+- **getDBALQueryBuilder() :**   returns a new DBAL query builder
+- **getDBALConnection() :**     returns a new DBAL connection (raw sql queries with DBAL wrapping)
+- **getPDOConnection() :**      returns a new PDO connection (raw sql queries)
 
 #### Monolith\Casterlith\Composer\AbstractComposer
 
@@ -235,25 +235,25 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 	- **leftJoin(fromAlias, toAlias, relationName) :**   apply left join between fromAlias' table and toAlias' table with relationName's condition
 
 - **Conditions:** They filter the result
-	- **where(condition) :**                             apply condition in query. query builder's expressions are allowed. reset selection
-	- **andWhere(condition) :**                          apply an and condition in query. query builder's expressions are allowed. add to current conditions
-	- **orWhere(condition) :**                           apply an or condition in query. query builder's expressions are allowed. add to current conditions
-	- **setParameter(key, value) :**                     parameters to send safely
+	- **where(condition) :**          apply condition in query. query builder's expressions are allowed. reset selection
+	- **andWhere(condition) :**       apply an and condition in query. query builder's expressions are allowed. add to current conditions
+	- **orWhere(condition) :**        apply an or condition in query. query builder's expressions are allowed. add to current conditions
+	- **setParameter(key, value) :**  parameters to send safely
 
 - **Orders:** They return the rows in certain order
-	- **order(sort, order) :**                           order query. reset order
-	- **addOrder(sort, order) :**                        order query. add to current order
+	- **order(sort, order) :**     order query. reset order
+	- **addOrder(sort, order) :**  order query. add to current order
 
 - **Response:** The result of the sql request returned as entity(ies)
-	- **first() :**                                      returns one entity. it won't optimize your sql request
-	- **all() :**                                        returns an array of entities
-	- **limit(first, max) :**                            returns an array of entities. be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according to the conditions request. to use only if needed because a second sql request is sent. 
+	- **first() :**            returns one entity. it won't optimize your sql request
+	- **all() :**              returns an array of entities
+	- **limit(first, max) :**  returns an array of entities. be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according to the conditions request. to use only if needed because a second sql request is sent. 
 
 - **Build a request**
-	- **getQueryBuilder() :**                            returns the composer's DBAL query builder. Usefull to apply expressions in conditions
-	- **getDBALConnection() :**                          returns the composer's DBAL connection. Usefull to use raw sql queries.
-	- **getPDOConnection() :**                           returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
-	- **getSQL() :**                                     get a sql version of the current composition.
+	- **getDBALQueryBuilder() :**  returns the composer's DBAL query builder. Usefull to apply expressions in conditions
+	- **getDBALConnection() :**    returns the composer's DBAL connection. Usefull to use raw sql queries.
+	- **getPDOConnection() :**     returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
+	- **getSQL() :**               get a sql version of the current composition.
 
 ### Joints
 
