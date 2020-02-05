@@ -208,11 +208,6 @@ class ArtistEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public $Name      = null;
 
 	public $albums  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->ArtistId;
-	}
 }
 
 class AlbumEntity implements \Monolith\Casterlith\Entity\EntityInterface
@@ -222,9 +217,4 @@ class AlbumEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public $ArtistId  = null;
 
 	public $artist  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->AlbumId;
-	}
 }

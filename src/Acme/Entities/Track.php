@@ -22,9 +22,4 @@ class Track implements EntityInterface
 	public $genre           = Casterlith::NOT_LOADED;
 	public $mediaType       = Casterlith::NOT_LOADED;
 	public $playlistTracks  = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->TrackId;
-	}
 }

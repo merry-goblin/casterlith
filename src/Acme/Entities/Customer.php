@@ -23,9 +23,4 @@ class Customer implements EntityInterface
 
 	public $employee  = Casterlith::NOT_LOADED;
 	public $invoices  = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->CustomerId;
-	}
 }

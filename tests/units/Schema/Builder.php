@@ -2053,11 +2053,6 @@ class ArtistEntity implements \Monolith\Casterlith\Entity\EntityInterface
 
 	public $albums             = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $albumsNoRecursion  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->ArtistId;
-	}
 }
 
 class AlbumEntity implements \Monolith\Casterlith\Entity\EntityInterface
@@ -2068,9 +2063,4 @@ class AlbumEntity implements \Monolith\Casterlith\Entity\EntityInterface
 
 	public $tracks  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $artist  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->AlbumId;
-	}
 }

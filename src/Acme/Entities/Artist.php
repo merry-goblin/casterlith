@@ -11,9 +11,4 @@ class Artist implements EntityInterface
 	public $Name      = null;
 
 	public $albums  = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->ArtistId;
-	}
 }

@@ -2737,11 +2737,6 @@ class ArtistEntity implements \Monolith\Casterlith\Entity\EntityInterface
 
 	public $albums             = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $albumsNoRecursion  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->ArtistId;
-	}
 }
 
 class AlbumEntity implements \Monolith\Casterlith\Entity\EntityInterface
@@ -2752,11 +2747,6 @@ class AlbumEntity implements \Monolith\Casterlith\Entity\EntityInterface
 
 	public $tracks  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $artist  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->AlbumId;
-	}
 }
 
 class InvoiceEntity implements \Monolith\Casterlith\Entity\EntityInterface
@@ -2770,11 +2760,6 @@ class InvoiceEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public $BillingCountry     = null;
 	public $BillingPostalCode  = null;
 	public $Total              = null;
-
-	public function getPrimaryValue()
-	{
-		return $this->InvoiceId;
-	}
 }
 
 class EmployeeEntity implements \Monolith\Casterlith\Entity\EntityInterface
@@ -2798,11 +2783,6 @@ class EmployeeEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public $customers     = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $reportsTo     = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $isReportedBy  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->EmployeeId;
-	}
 }
 
 //	Invalid

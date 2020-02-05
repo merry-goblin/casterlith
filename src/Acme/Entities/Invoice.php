@@ -19,9 +19,4 @@ class Invoice implements EntityInterface
 
 	public $customer  = Casterlith::NOT_LOADED;
 	public $items     = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->InvoiceId;
-	}
 }

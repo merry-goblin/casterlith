@@ -11,9 +11,4 @@ class Playlist implements EntityInterface
 	public $Name        = null;
 
 	public $playlistTracks  = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->PlaylistId;
-	}
 }

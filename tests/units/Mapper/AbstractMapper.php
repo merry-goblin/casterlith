@@ -214,9 +214,4 @@ class TypeEntity implements \Monolith\Casterlith\Entity\EntityInterface
 
 	public $parent   = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $children = \Monolith\Casterlith\Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->id;
-	}
 }

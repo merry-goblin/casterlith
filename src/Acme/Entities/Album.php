@@ -13,9 +13,4 @@ class Album implements EntityInterface
 
 	public $tracks  = Casterlith::NOT_LOADED;
 	public $artist  = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->AlbumId;
-	}
 }

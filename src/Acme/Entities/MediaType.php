@@ -11,9 +11,4 @@ class MediaType implements EntityInterface
 	public $Name         = null;
 
 	public $tracks = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->MediaTypeId;
-	}
 }

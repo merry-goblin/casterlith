@@ -26,9 +26,4 @@ class Employee implements EntityInterface
 	public $customers     = Casterlith::NOT_LOADED;
 	public $reportsTo     = Casterlith::NOT_LOADED;
 	public $isReportedBy  = Casterlith::NOT_LOADED;
-
-	public function getPrimaryValue()
-	{
-		return $this->EmployeeId;
-	}
 }
