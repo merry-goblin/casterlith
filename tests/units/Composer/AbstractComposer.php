@@ -1072,27 +1072,26 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$qb = $composer->getDBALQueryBuilder(); 
 
 		$query = $composer
 			->select('art', 'alb')
 			->join('art', 'alb', 'albums')
-			->where($qb->expr()->andX(
-				$qb->expr()->eq('art.Name', ':artistName'),
-				$qb->expr()->neq('art.Name', ':notArtistName'),
-				$qb->expr()->lt('art.ArtistId', ':ltArtistId'),
-				$qb->expr()->lte('art.ArtistId', ':lteArtistId'),
-				$qb->expr()->gt('art.ArtistId', ':gtArtistId'),
-				$qb->expr()->gte('art.ArtistId', ':gteArtistId'),
-				$qb->expr()->isNull('null'),
-				$qb->expr()->isNotNull('alb.AlbumId'),
-				$qb->expr()->like('alb.Title', ':albumTitle'),
-				$qb->expr()->notLike('alb.Title', ':notAlbumTitle'),
-				$qb->expr()->in('alb.AlbumId', ':inAlbumIds'),
-				$qb->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
-				$qb->expr()->orX(
-					$qb->expr()->eq('art.Name', ':orXArtistId'),
-					$qb->expr()->eq('art.Name', ':orXArtistName')
+			->where($composer->expr()->andX(
+				$composer->expr()->eq('art.Name', ':artistName'),
+				$composer->expr()->neq('art.Name', ':notArtistName'),
+				$composer->expr()->lt('art.ArtistId', ':ltArtistId'),
+				$composer->expr()->lte('art.ArtistId', ':lteArtistId'),
+				$composer->expr()->gt('art.ArtistId', ':gtArtistId'),
+				$composer->expr()->gte('art.ArtistId', ':gteArtistId'),
+				$composer->expr()->isNull('null'),
+				$composer->expr()->isNotNull('alb.AlbumId'),
+				$composer->expr()->like('alb.Title', ':albumTitle'),
+				$composer->expr()->notLike('alb.Title', ':notAlbumTitle'),
+				$composer->expr()->in('alb.AlbumId', ':inAlbumIds'),
+				$composer->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
+				$composer->expr()->orX(
+					$composer->expr()->eq('art.Name', ':orXArtistId'),
+					$composer->expr()->eq('art.Name', ':orXArtistName')
 				)
 			))
 			->setParameter('artistName', "Audioslave")
@@ -1279,28 +1278,27 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$qb = $composer->getDBALQueryBuilder();
 
 		$query = $composer
 			->select('art', 'alb')
 			->join('art', 'alb', 'albums')
 			->where('art.ArtistId IS NOT NULL')
-			->andWhere($qb->expr()->andX(
-				$qb->expr()->eq('art.Name', ':artistName'),
-				$qb->expr()->neq('art.Name', ':notArtistName'),
-				$qb->expr()->lt('art.ArtistId', ':ltArtistId'),
-				$qb->expr()->lte('art.ArtistId', ':lteArtistId'),
-				$qb->expr()->gt('art.ArtistId', ':gtArtistId'),
-				$qb->expr()->gte('art.ArtistId', ':gteArtistId'),
-				$qb->expr()->isNull('null'),
-				$qb->expr()->isNotNull('alb.AlbumId'),
-				$qb->expr()->like('alb.Title', ':albumTitle'),
-				$qb->expr()->notLike('alb.Title', ':notAlbumTitle'),
-				$qb->expr()->in('alb.AlbumId', ':inAlbumIds'),
-				$qb->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
-				$qb->expr()->orX(
-					$qb->expr()->eq('art.Name', ':orXArtistId'),
-					$qb->expr()->eq('art.Name', ':orXArtistName')
+			->andWhere($composer->expr()->andX(
+				$composer->expr()->eq('art.Name', ':artistName'),
+				$composer->expr()->neq('art.Name', ':notArtistName'),
+				$composer->expr()->lt('art.ArtistId', ':ltArtistId'),
+				$composer->expr()->lte('art.ArtistId', ':lteArtistId'),
+				$composer->expr()->gt('art.ArtistId', ':gtArtistId'),
+				$composer->expr()->gte('art.ArtistId', ':gteArtistId'),
+				$composer->expr()->isNull('null'),
+				$composer->expr()->isNotNull('alb.AlbumId'),
+				$composer->expr()->like('alb.Title', ':albumTitle'),
+				$composer->expr()->notLike('alb.Title', ':notAlbumTitle'),
+				$composer->expr()->in('alb.AlbumId', ':inAlbumIds'),
+				$composer->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
+				$composer->expr()->orX(
+					$composer->expr()->eq('art.Name', ':orXArtistId'),
+					$composer->expr()->eq('art.Name', ':orXArtistName')
 				)
 			))
 			->setParameter('artistName', "Audioslave")
@@ -1489,28 +1487,27 @@ class AbstractComposer extends atoum
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
-		$qb = $composer->getDBALQueryBuilder();
 
 		$query = $composer
 			->select('art', 'alb')
 			->join('art', 'alb', 'albums')
 			->where('art.ArtistId IS NOT NULL')
-			->orWhere($qb->expr()->andX(
-				$qb->expr()->eq('art.Name', ':artistName'),
-				$qb->expr()->neq('art.Name', ':notArtistName'),
-				$qb->expr()->lt('art.ArtistId', ':ltArtistId'),
-				$qb->expr()->lte('art.ArtistId', ':lteArtistId'),
-				$qb->expr()->gt('art.ArtistId', ':gtArtistId'),
-				$qb->expr()->gte('art.ArtistId', ':gteArtistId'),
-				$qb->expr()->isNull('null'),
-				$qb->expr()->isNotNull('alb.AlbumId'),
-				$qb->expr()->like('alb.Title', ':albumTitle'),
-				$qb->expr()->notLike('alb.Title', ':notAlbumTitle'),
-				$qb->expr()->in('alb.AlbumId', ':inAlbumIds'),
-				$qb->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
-				$qb->expr()->orX(
-					$qb->expr()->eq('art.Name', ':orXArtistId'),
-					$qb->expr()->eq('art.Name', ':orXArtistName')
+			->orWhere($composer->expr()->andX(
+				$composer->expr()->eq('art.Name', ':artistName'),
+				$composer->expr()->neq('art.Name', ':notArtistName'),
+				$composer->expr()->lt('art.ArtistId', ':ltArtistId'),
+				$composer->expr()->lte('art.ArtistId', ':lteArtistId'),
+				$composer->expr()->gt('art.ArtistId', ':gtArtistId'),
+				$composer->expr()->gte('art.ArtistId', ':gteArtistId'),
+				$composer->expr()->isNull('null'),
+				$composer->expr()->isNotNull('alb.AlbumId'),
+				$composer->expr()->like('alb.Title', ':albumTitle'),
+				$composer->expr()->notLike('alb.Title', ':notAlbumTitle'),
+				$composer->expr()->in('alb.AlbumId', ':inAlbumIds'),
+				$composer->expr()->notIn('alb.AlbumId', ':notInAlbumIds'),
+				$composer->expr()->orX(
+					$composer->expr()->eq('art.Name', ':orXArtistId'),
+					$composer->expr()->eq('art.Name', ':orXArtistName')
 				)
 			))
 			->setParameter('artistName', "Audioslave")

@@ -13,7 +13,6 @@ $config->setSelectionReplacer("_cl"); // The replacer insures that table's alias
 
 $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
 $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
-$qb             = $trackComposer->getDBALQueryBuilder();                  // DBAL's query builder for expressions
 
 $tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
@@ -28,9 +27,9 @@ $tracks = $trackComposer
 	->join("inv", "c", "customer")
 	->join("c", "sub", "employee")
 	->join("sub", "sup", "reportsTo")
-	->where($qb->expr()->andX(
-		$qb->expr()->like('t.Name', ':trackName'),
-		$qb->expr()->eq('art.Name', ':artistName')
+	->where($trackComposer->expr()->andX(
+		$trackComposer->expr()->like('t.Name', ':trackName'),
+		$trackComposer->expr()->eq('art.Name', ':artistName')
 	))
 	->setParameter('trackName', "%Princess%")
 	->setParameter('artistName', "Accept")

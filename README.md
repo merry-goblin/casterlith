@@ -231,13 +231,13 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 
 - **Joints:** Relation between entities
 	- **join(fromAlias, toAlias, relationName) :**       see innerJoin method
-	- **innerJoin(fromAlias, toAlias, relationName) :**  apply inner join between fromAlias' table and toAlias' table with relationName's condition
-	- **leftJoin(fromAlias, toAlias, relationName) :**   apply left join between fromAlias' table and toAlias' table with relationName's condition
+	- **innerJoin(fromAlias, toAlias, relationName) :**  applies inner join between fromAlias' table and toAlias' table with relationName's condition
+	- **leftJoin(fromAlias, toAlias, relationName) :**   applies left join between fromAlias' table and toAlias' table with relationName's condition
 
 - **Conditions:** They filter the result
-	- **where(condition) :**          apply condition in query. query builder's expressions are allowed. reset selection
-	- **andWhere(condition) :**       apply an and condition in query. query builder's expressions are allowed. add to current conditions
-	- **orWhere(condition) :**        apply an or condition in query. query builder's expressions are allowed. add to current conditions
+	- **where(condition) :**          applies condition in query. query builder's expressions are allowed. reset selection
+	- **andWhere(condition) :**       applies an and condition in query. query builder's expressions are allowed. add to current conditions
+	- **orWhere(condition) :**        applies an or condition in query. query builder's expressions are allowed. add to current conditions
 	- **setParameter(key, value) :**  parameters to send safely
 
 - **Orders:** They return the rows in certain order
@@ -253,7 +253,8 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 	- **getDBALQueryBuilder() :**  returns the composer's DBAL query builder. Usefull to apply expressions in conditions
 	- **getDBALConnection() :**    returns the composer's DBAL connection. Usefull to use raw sql queries.
 	- **getPDOConnection() :**     returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
-	- **getSQL() :**               get a sql version of the current composition.
+	- **getSQL() :**               returns a sql version of the current composition.
+	- **expr() :**                 returns an expression builder.
 
 ### Joints
 

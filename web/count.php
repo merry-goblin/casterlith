@@ -13,7 +13,6 @@ $config->setSelectionReplacer("_cl"); // The replacer insures that table's alias
 
 $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
 $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
-$qb             = $trackComposer->getDBALQueryBuilder();                  // DBAL's query builder for expressions
 
 $tracks = $trackComposer
 	->selectAsRaw("t", "count(t.TrackId) as nb")
