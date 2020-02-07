@@ -1969,27 +1969,15 @@ class ArtistMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements
 {
 	protected static $table      = 'artists';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Schema\\ArtistEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'ArtistId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Name'      => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'ArtistId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'ArtistId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Name'      => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()
@@ -2009,28 +1997,16 @@ class AlbumMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements 
 {
 	protected static $table      = 'albums';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Schema\\AlbumEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Title'     => array('type' => 'string'),
+		'ArtistId'  => array('type' => 'integer'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'AlbumId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Title'     => array('type' => 'string'),
-				'ArtistId'  => array('type' => 'integer'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

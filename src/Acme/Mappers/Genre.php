@@ -14,27 +14,15 @@ class Genre extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'genres';
 	protected static $entity     = 'Acme\Entities\Genre';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'GenreId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Name'     => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'GenreId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'GenreId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Name'     => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

@@ -15,28 +15,16 @@ class Album extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'albums';
 	protected static $entity     = 'Acme\Entities\Album';
-	protected static $fields     = null;
-	protected static $relations  = null;
+	protected static $fields     = array(
+		'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Title'     => array('type' => 'string'),
+		'ArtistId'  => array('type' => 'integer'),
+	);
+	protected static $relations   = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'AlbumId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Title'     => array('type' => 'string'),
-				'ArtistId'  => array('type' => 'integer'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

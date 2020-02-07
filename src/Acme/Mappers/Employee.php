@@ -15,40 +15,28 @@ class Employee extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'employees';
 	protected static $entity     = 'Acme\Entities\Employee';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'EmployeeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'FirstName'   => array('type' => 'string'),
+		'LastName'    => array('type' => 'string'),
+		'Title'       => array('type' => 'string'),
+		'ReportsTo'   => array('type' => 'string'),
+		'BirthDate'   => array('type' => 'string'),
+		'HireDate'    => array('type' => 'string'),
+		'Address'     => array('type' => 'string'),
+		'City'        => array('type' => 'string'),
+		'State'       => array('type' => 'string'),
+		'Country'     => array('type' => 'string'),
+		'PostalCode'  => array('type' => 'string'),
+		'Phone'       => array('type' => 'string'),
+		'Fax'         => array('type' => 'string'),
+		'Email'       => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'EmployeeId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'EmployeeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'FirstName'   => array('type' => 'string'),
-				'LastName'    => array('type' => 'string'),
-				'Title'       => array('type' => 'string'),
-				'ReportsTo'   => array('type' => 'string'),
-				'BirthDate'   => array('type' => 'string'),
-				'HireDate'    => array('type' => 'string'),
-				'Address'     => array('type' => 'string'),
-				'City'        => array('type' => 'string'),
-				'State'       => array('type' => 'string'),
-				'Country'     => array('type' => 'string'),
-				'PostalCode'  => array('type' => 'string'),
-				'Phone'       => array('type' => 'string'),
-				'Fax'         => array('type' => 'string'),
-				'Email'       => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

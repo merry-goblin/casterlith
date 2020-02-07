@@ -15,39 +15,27 @@ class Customer extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'customers';
 	protected static $entity     = 'Acme\Entities\Customer';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'CustomerId'    => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'FirstName'     => array('type' => 'string'),
+		'LastName'      => array('type' => 'string'),
+		'Company'       => array('type' => 'string'),
+		'LastName'      => array('type' => 'string'),
+		'Address'       => array('type' => 'string'),
+		'City'          => array('type' => 'string'),
+		'State'         => array('type' => 'string'),
+		'Country'       => array('type' => 'string'),
+		'PostalCode'    => array('type' => 'string'),
+		'Phone'         => array('type' => 'string'),
+		'Fax'           => array('type' => 'string'),
+		'Email'         => array('type' => 'string'),
+		'SupportRepId'  => array('type' => 'integer'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'CustomerId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'CustomerId'    => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'FirstName'     => array('type' => 'string'),
-				'LastName'      => array('type' => 'string'),
-				'Company'       => array('type' => 'string'),
-				'LastName'      => array('type' => 'string'),
-				'Address'       => array('type' => 'string'),
-				'City'          => array('type' => 'string'),
-				'State'         => array('type' => 'string'),
-				'Country'       => array('type' => 'string'),
-				'PostalCode'    => array('type' => 'string'),
-				'Phone'         => array('type' => 'string'),
-				'Fax'           => array('type' => 'string'),
-				'Email'         => array('type' => 'string'),
-				'SupportRepId'  => array('type' => 'integer'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

@@ -14,27 +14,15 @@ class MediaType extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'media_types';
 	protected static $entity     = 'Acme\Entities\MediaType';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'MediaTypeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Name'         => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'MediaTypeId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'MediaTypeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Name'         => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

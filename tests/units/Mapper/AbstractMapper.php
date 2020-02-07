@@ -158,34 +158,22 @@ class TypeMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \
 {
 	protected static $table      = 'types';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Mapper\\TypeEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'id'         => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'anInteger'  => array('type' => 'integer'),
+		'aString'    => array('type' => 'string'),
+		'aBlob'      => array('type' => 'blob'),
+		'aReal'      => array('type' => 'float'),
+		'aNumeric'   => array('type' => 'decimal'),
+		'aDate'      => array('type' => 'date'),
+		'aDateTime'  => array('type' => 'datetime'),
+		'parentId'   => array('type' => 'integer'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'id';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'id'         => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'anInteger'  => array('type' => 'integer'),
-				'aString'    => array('type' => 'string'),
-				'aBlob'      => array('type' => 'blob'),
-				'aReal'      => array('type' => 'float'),
-				'aNumeric'   => array('type' => 'decimal'),
-				'aDate'      => array('type' => 'date'),
-				'aDateTime'  => array('type' => 'datetime'),
-				'parentId'   => array('type' => 'integer'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

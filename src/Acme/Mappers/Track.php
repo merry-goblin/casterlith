@@ -18,34 +18,22 @@ class Track extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'tracks';
 	protected static $entity     = 'Acme\Entities\Track';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'TrackId'       => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Name'          => array('type' => 'string'),
+		'AlbumId'       => array('type' => 'integer'),
+		'MediaTypeId'   => array('type' => 'integer'),
+		'GenreId'       => array('type' => 'integer'),
+		'Composer'      => array('type' => 'string'),
+		'Milliseconds'  => array('type' => 'integer'),
+		'Bytes'         => array('type' => 'integer'),
+		'UnitPrice'     => array('type' => 'decimal'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'TrackId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'TrackId'       => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Name'          => array('type' => 'string'),
-				'AlbumId'       => array('type' => 'integer'),
-				'MediaTypeId'   => array('type' => 'integer'),
-				'GenreId'       => array('type' => 'integer'),
-				'Composer'      => array('type' => 'string'),
-				'Milliseconds'  => array('type' => 'integer'),
-				'Bytes'         => array('type' => 'integer'),
-				'UnitPrice'     => array('type' => 'decimal'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

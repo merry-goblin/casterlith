@@ -61,7 +61,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.ArtistId IN (1)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (1)")
 		;
 		$this
 			->object($art)
@@ -85,7 +85,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE art.ArtistId IN (1)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE `art`.`ArtistId` IN (1)")
 		;
 	}
 
@@ -162,7 +162,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.ArtistId IN (1)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (1)")
 		;
 	}
 
@@ -185,13 +185,52 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId = 2) AND (art.ArtistId IN (2))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 2) AND (`art`.`ArtistId` IN (2))")
+		;
+	}
+
+	public function testSelectWithOneRenamedEntityAlias()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+		;
+		$art = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (1)")
+		;
+		$this
+			->object($art)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->string($art->name)
+				->isEqualTo("AC/DC")
+		;
+	}
+
+	public function testSelectWithTwoRenamedEntityAlias()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE `art`.`ArtistId` IN (1)")
 		;
 	}
 
 	/*** addSelect ***/
 
-	public function testAddSelectWithEntityAlias()
+	public function testAddSelectWithOneEntityAlias()
 	{
 		$orm = getAReadOnlyOrmInstance();
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
@@ -290,7 +329,22 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE art.ArtistId IN (1)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE `art`.`ArtistId` IN (1)")
+		;
+	}
+
+	public function testAddSelectWithOneRenamedEntityAlias()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->addSelect('alb')
+		;
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art")
 		;
 	}
 
@@ -372,7 +426,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId")
+				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
 		;
 	}
 
@@ -442,7 +496,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId")
+				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
 		;
 	}
 
@@ -701,6 +755,31 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testJoinWithOneRenamedArtist()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->array($artist->albums)
+			 	->hasSize(2)
+			 	->hasKeys(array(1, 4))
+		;
+		$this
+			->string($artist->albums[4]->title)
+				->isEqualTo("Let There Be Rock")
+		;
+	}
+
 	/*** leftJoin ***/
 
 	public function testLeftJoinWithOneArtist()
@@ -950,6 +1029,50 @@ class AbstractComposer extends atoum
 		;
 	}
 
+	public function testLeftJoinWithAllRenamedArtists()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->leftJoin('art', 'alb', 'albums')
+		;
+		$artists = $query->all();
+		$artist = $artists[227];
+
+		$artist->albumsNoRecursion[293];
+
+		$this
+			->array($artists)
+				->hasSize(275)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->array($artist->albums)
+			 	->hasSize(1)
+			 	->hasKeys(array(293))
+		;
+		$this
+			->string($artist->albums[293]->title)
+				->isEqualTo("Pavarotti's Opera Made Easy")
+		;
+		$this
+			->integer($artist->albums[293]->id)
+				->isEqualTo(293)
+		;
+		$this
+			->string($artist->albums[293]->artist->name)
+				->isEqualTo("Luciano Pavarotti")
+		;
+		$this
+			->variable($artist->albumsNoRecursion)
+				->isIdenticalTo(\Monolith\Casterlith\Casterlith::NOT_LOADED)
+		;
+	}
+
 	/*** where ***/
 
 	public function testWhereAll()
@@ -973,7 +1096,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.Name = \"Green Day\"")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`Name` = \"Green Day\"")
 		;
 	}
 
@@ -997,7 +1120,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1013,7 +1136,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = 'Green Day') AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = 'Green Day') AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1029,7 +1152,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1045,7 +1168,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId = 54) AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`ArtistId` = 54) AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1060,7 +1183,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE (inv.InvoiceDate = \"2013-12-04 00:00:00\") AND (inv.InvoiceId IN (406))")
+				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE (`inv`.`InvoiceDate` = \"2013-12-04 00:00:00\") AND (`inv`.`InvoiceId` IN (406))")
 		;
 		$this
 			->dateTime($invoice->InvoiceDate)
@@ -1119,7 +1242,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.Name = :artistName) AND (art.Name <> :notArtistName) AND (art.ArtistId < :ltArtistId) AND (art.ArtistId <= :lteArtistId) AND (art.ArtistId > :gtArtistId) AND (art.ArtistId >= :gteArtistId) AND (null IS NULL) AND (alb.AlbumId IS NOT NULL) AND (alb.Title LIKE :albumTitle) AND (alb.Title NOT LIKE :notAlbumTitle) AND (alb.AlbumId IN (:inAlbumIds)) AND (alb.AlbumId NOT IN (:notInAlbumIds)) AND ((art.Name = :orXArtistId) OR (art.Name = :orXArtistName)) AND (art.ArtistId IN (8))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE ((`art`.`Name` = :artistName) AND (`art`.`Name` <> :notArtistName) AND (`art`.`ArtistId` < :ltArtistId) AND (`art`.`ArtistId` <= :lteArtistId) AND (`art`.`ArtistId` > :gtArtistId) AND (`art`.`ArtistId` >= :gteArtistId) AND (null IS NULL) AND (`alb`.`AlbumId` IS NOT NULL) AND (`alb`.`Title` LIKE :albumTitle) AND (`alb`.`Title` NOT LIKE :notAlbumTitle) AND (`alb`.`AlbumId` IN (:inAlbumIds)) AND (`alb`.`AlbumId` NOT IN (:notInAlbumIds)) AND ((`art`.`Name` = :orXArtistId) OR (`art`.`Name` = :orXArtistName))) AND (`art`.`ArtistId` IN (8))")
 		;
 	}
 
@@ -1142,7 +1265,72 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId = 4) AND (art.ArtistId IN (4))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`ArtistId` = 4) AND (`art`.`ArtistId` IN (4))")
+		;
+	}
+
+	public function testWhereAllRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->where('art.name = "Green Day"')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->integer($artist->id)
+			 	->isEqualTo(54)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`Name` = \"Green Day\"")
+		;
+	}
+
+	public function testWhereFirstRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->where('art.name = "Green Day"')
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->integer($artist->id)
+			 	->isEqualTo(54)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` IN (54))")
+		;
+	}
+
+	public function testWhereWithGraveAccentRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->where('`art`.`name` = "Green Day"')
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1170,7 +1358,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") AND (art.ArtistId = 54)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` = 54)")
 		;
 	}
 
@@ -1195,7 +1383,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") AND (art.ArtistId = 54) AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` = 54) AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1212,7 +1400,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId IS NOT NULL) AND (art.Name = 'Green Day') AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`ArtistId` IS NOT NULL) AND (`art`.`Name` = 'Green Day') AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1229,7 +1417,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` = 54) AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") AND (`art`.`ArtistId` = 54) AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1246,7 +1434,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId IS NOT NULL) AND (art.ArtistId = 54) AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`ArtistId` IS NOT NULL) AND (`art`.`ArtistId` = 54) AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1266,7 +1454,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE (inv.InvoiceId IS NOT NULL) AND (inv.InvoiceDate = :invoiceDate) AND (inv.InvoiceId IN (406))")
+				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE (`inv`.`InvoiceId` IS NOT NULL) AND (`inv`.`InvoiceDate` = :invoiceDate) AND (`inv`.`InvoiceId` IN (406))")
 		;
 		$this
 			->dateTime($invoice->InvoiceDate)
@@ -1326,7 +1514,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId IS NOT NULL) AND ((art.Name = :artistName) AND (art.Name <> :notArtistName) AND (art.ArtistId < :ltArtistId) AND (art.ArtistId <= :lteArtistId) AND (art.ArtistId > :gtArtistId) AND (art.ArtistId >= :gteArtistId) AND (null IS NULL) AND (alb.AlbumId IS NOT NULL) AND (alb.Title LIKE :albumTitle) AND (alb.Title NOT LIKE :notAlbumTitle) AND (alb.AlbumId IN (:inAlbumIds)) AND (alb.AlbumId NOT IN (:notInAlbumIds)) AND ((art.Name = :orXArtistId) OR (art.Name = :orXArtistName))) AND (art.ArtistId IN (8))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` IS NOT NULL) AND ((`art`.`Name` = :artistName) AND (`art`.`Name` <> :notArtistName) AND (`art`.`ArtistId` < :ltArtistId) AND (`art`.`ArtistId` <= :lteArtistId) AND (`art`.`ArtistId` > :gtArtistId) AND (`art`.`ArtistId` >= :gteArtistId) AND (null IS NULL) AND (`alb`.`AlbumId` IS NOT NULL) AND (`alb`.`Title` LIKE :albumTitle) AND (`alb`.`Title` NOT LIKE :notAlbumTitle) AND (`alb`.`AlbumId` IN (:inAlbumIds)) AND (`alb`.`AlbumId` NOT IN (:notInAlbumIds)) AND ((`art`.`Name` = :orXArtistId) OR (`art`.`Name` = :orXArtistName))) AND (`art`.`ArtistId` IN (8))")
 		;
 	}
 
@@ -1351,7 +1539,63 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.ArtistId IS NOT NULL) AND (art.ArtistId = 4) AND (art.ArtistId IN (4))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`ArtistId` IS NOT NULL) AND (`art`.`ArtistId` = 4) AND (`art`.`ArtistId` IN (4))")
+		;
+	}
+
+	public function testAndWhereWithRenamedExpressionBuilder()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->where('art.id IS NOT NULL')
+			->andWhere($composer->expr()->andX(
+				$composer->expr()->eq('art.name', ':artistName'),
+				$composer->expr()->neq('art.name', ':notArtistName'),
+				$composer->expr()->lt('art.id', ':ltArtistId'),
+				$composer->expr()->lte('art.id', ':lteArtistId'),
+				$composer->expr()->gt('art.id', ':gtArtistId'),
+				$composer->expr()->gte('art.id', ':gteArtistId'),
+				$composer->expr()->isNull('null'),
+				$composer->expr()->isNotNull('alb.id'),
+				$composer->expr()->like('alb.title', ':albumTitle'),
+				$composer->expr()->notLike('alb.title', ':notAlbumTitle'),
+				$composer->expr()->in('alb.id', ':inAlbumIds'),
+				$composer->expr()->notIn('alb.id', ':notInAlbumIds'),
+				$composer->expr()->orX(
+					$composer->expr()->eq('art.name', ':orXArtistId'),
+					$composer->expr()->eq('art.name', ':orXArtistName')
+				)
+			))
+			->setParameter('artistName', "Audioslave")
+			->setParameter('notArtistName', "BackBeat")
+			->setParameter('ltArtistId', 9)
+			->setParameter('lteArtistId', 8)
+			->setParameter('gtArtistId', 7)
+			->setParameter('gteArtistId', 8)
+			->setParameter('albumTitle', "%Exile")
+			->setParameter('notAlbumTitle', "Carnaval%")
+			->setParameter('inAlbumIds', array(10,11), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('notInAlbumIds', array(12,13), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+			->setParameter('orXArtistId', 8)
+			->setParameter('orXArtistName', "Audioslave")
+		;
+		$artist = $query->first();
+
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->integer($artist->id)
+			 	->isEqualTo(8)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` IS NOT NULL) AND ((`art`.`Name` = :artistName) AND (`art`.`Name` <> :notArtistName) AND (`art`.`ArtistId` < :ltArtistId) AND (`art`.`ArtistId` <= :lteArtistId) AND (`art`.`ArtistId` > :gtArtistId) AND (`art`.`ArtistId` >= :gteArtistId) AND (null IS NULL) AND (`alb`.`AlbumId` IS NOT NULL) AND (`alb`.`Title` LIKE :albumTitle) AND (`alb`.`Title` NOT LIKE :notAlbumTitle) AND (`alb`.`AlbumId` IN (:inAlbumIds)) AND (`alb`.`AlbumId` NOT IN (:notInAlbumIds)) AND ((`art`.`Name` = :orXArtistId) OR (`art`.`Name` = :orXArtistName))) AND (`art`.`ArtistId` IN (8))")
 		;
 	}
 
@@ -1379,7 +1623,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = \"Green Day\") OR (art.ArtistId = 54)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = \"Green Day\") OR (`art`.`ArtistId` = 54)")
 		;
 	}
 
@@ -1404,7 +1648,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.Name = \"Green Day\") OR (art.ArtistId = 54)) AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`Name` = \"Green Day\") OR (`art`.`ArtistId` = 54)) AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1421,7 +1665,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.ArtistId IS NOT NULL) OR (art.Name = 'Green Day')) AND (art.ArtistId IN (1))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`ArtistId` IS NOT NULL) OR (`art`.`Name` = 'Green Day')) AND (`art`.`ArtistId` IN (1))")
 		;
 	}
 
@@ -1438,7 +1682,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`Name` = \"Green Day\") OR (`art`.`ArtistId` = 54)) AND (art.ArtistId IN (54))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`Name` = \"Green Day\") OR (`art`.`ArtistId` = 54)) AND (`art`.`ArtistId` IN (54))")
 		;
 	}
 
@@ -1455,7 +1699,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.ArtistId IS NOT NULL) OR (art.ArtistId = 54)) AND (art.ArtistId IN (1))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`ArtistId` IS NOT NULL) OR (`art`.`ArtistId` = 54)) AND (`art`.`ArtistId` IN (1))")
 		;
 	}
 
@@ -1475,7 +1719,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE ((inv.InvoiceId IS NOT NULL) OR (inv.InvoiceDate = :invoiceDate)) AND (inv.InvoiceId IN (1))")
+				->isEqualTo("SELECT inv.InvoiceId as invcl1_InvoiceId,inv.CustomerId as invcl1_CustomerId,inv.InvoiceDate as invcl1_InvoiceDate,inv.BillingAddress as invcl1_BillingAddress,inv.BillingCity as invcl1_BillingCity,inv.BillingState as invcl1_BillingState,inv.BillingCountry as invcl1_BillingCountry,inv.BillingPostalCode as invcl1_BillingPostalCode,inv.Total as invcl1_Total FROM invoices inv WHERE ((`inv`.`InvoiceId` IS NOT NULL) OR (`inv`.`InvoiceDate` = :invoiceDate)) AND (`inv`.`InvoiceId` IN (1))")
 		;
 		$this
 			->dateTime($invoice->InvoiceDate)
@@ -1535,7 +1779,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE ((art.ArtistId IS NOT NULL) OR ((art.Name = :artistName) AND (art.Name <> :notArtistName) AND (art.ArtistId < :ltArtistId) AND (art.ArtistId <= :lteArtistId) AND (art.ArtistId > :gtArtistId) AND (art.ArtistId >= :gteArtistId) AND (null IS NULL) AND (alb.AlbumId IS NOT NULL) AND (alb.Title LIKE :albumTitle) AND (alb.Title NOT LIKE :notAlbumTitle) AND (alb.AlbumId IN (:inAlbumIds)) AND (alb.AlbumId NOT IN (:notInAlbumIds)) AND ((art.Name = :orXArtistId) OR (art.Name = :orXArtistName)))) AND (art.ArtistId IN (1))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE ((`art`.`ArtistId` IS NOT NULL) OR ((`art`.`Name` = :artistName) AND (`art`.`Name` <> :notArtistName) AND (`art`.`ArtistId` < :ltArtistId) AND (`art`.`ArtistId` <= :lteArtistId) AND (`art`.`ArtistId` > :gtArtistId) AND (`art`.`ArtistId` >= :gteArtistId) AND (null IS NULL) AND (`alb`.`AlbumId` IS NOT NULL) AND (`alb`.`Title` LIKE :albumTitle) AND (`alb`.`Title` NOT LIKE :notAlbumTitle) AND (`alb`.`AlbumId` IN (:inAlbumIds)) AND (`alb`.`AlbumId` NOT IN (:notInAlbumIds)) AND ((`art`.`Name` = :orXArtistId) OR (`art`.`Name` = :orXArtistName)))) AND (`art`.`ArtistId` IN (1))")
 		;
 	}
 
@@ -1560,7 +1804,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((art.ArtistId IS NOT NULL) OR (art.ArtistId = 4)) AND (art.ArtistId IN (1))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE ((`art`.`ArtistId` IS NOT NULL) OR (`art`.`ArtistId` = 4)) AND (`art`.`ArtistId` IN (1))")
 		;
 	}
 
@@ -1579,10 +1823,31 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (art.Name = :artistName) AND (art.ArtistId IN (5))")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = :artistName) AND (`art`.`ArtistId` IN (5))")
 		;
 		$this
 			->string($artist->Name)
+				->isEqualTo("Alice In Chains")
+		;
+	}
+
+	public function testSetParameterRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->where('art.name = :artistName')
+			->setParameter('artistName', "Alice In Chains")
+		;
+		$artist = $query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE (`art`.`Name` = :artistName) AND (`art`.`ArtistId` IN (5))")
+		;
+		$this
+			->string($artist->name)
 				->isEqualTo("Alice In Chains")
 		;
 	}
@@ -1623,7 +1888,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.ArtistId")
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`")
 		;
 	}
 
@@ -1651,7 +1916,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY alb.ArtistId")
+				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY `alb`.`ArtistId`")
 		;
 	}
 
@@ -1686,7 +1951,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.AlbumId")
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`AlbumId`")
 		;
 	}
 
@@ -1715,7 +1980,41 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY alb.AlbumId")
+				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY `alb`.`AlbumId`")
+		;
+	}
+
+	public function testGroupByRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumRenamedComposer');
+		$query = $composer
+			->select('alb', 'art')
+			->join('alb', 'art', 'artist')
+			->groupBy('alb.artistId')
+		;
+		$albums = $query->all();
+		$album  = reset($albums);
+
+		$this
+			->array($albums)
+				->hasSize(204)
+		;
+		$this
+			->object($album)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumRenamedEntity')
+		;
+		$this
+			->object($album->artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->array($album->artist->albums)
+				->hasSize(1) // Instead of 2 because of the groupBy
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`")
 		;
 	}
 
@@ -1752,7 +2051,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.ArtistId, art.ArtistId")
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`, `art`.`ArtistId`")
 		;
 	}
 
@@ -1782,7 +2081,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.ArtistId, art.ArtistId")
+				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`, `art`.`ArtistId`")
 		;
 	}
 
@@ -1818,7 +2117,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.AlbumId")
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`AlbumId`")
 		;
 	}
 
@@ -1849,7 +2148,42 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb INNER JOIN artists art ON `alb`.ArtistId = `art`.ArtistId GROUP BY alb.AlbumId")
+				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`AlbumId`")
+		;
+	}
+
+	public function testAddGroupByRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumRenamedComposer');
+		$query = $composer
+			->select('alb', 'art')
+			->join('alb', 'art', 'artist')
+			->groupBy('alb.artistId')
+			->addGroupBy('art.id')
+		;
+		$albums = $query->all();
+		$album  = reset($albums);
+
+		$this
+			->array($albums)
+				->hasSize(204)
+		;
+		$this
+			->object($album)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumRenamedEntity')
+		;
+		$this
+			->object($album->artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->array($album->artist->albums)
+				->hasSize(1) // Instead of 2 because of the groupBy
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT alb.AlbumId as albcl1_AlbumId,alb.Title as albcl1_Title,alb.ArtistId as albcl1_ArtistId, art.ArtistId as artcl2_ArtistId,art.Name as artcl2_Name FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`, `art`.`ArtistId`")
 		;
 	}
 
@@ -1886,7 +2220,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING COUNT(alb.AlbumId) > 2")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING COUNT(`alb`.`AlbumId`) > 2")
 		;
 	}
 
@@ -1916,7 +2250,42 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING COUNT(alb.AlbumId) > 2")
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING COUNT(`alb`.`AlbumId`) > 2")
+		;
+	}
+
+	public function testHavingRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.id')
+			->having('COUNT(alb.id) > 2')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->array($artists)
+				->hasSize(26)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->integer($artist->id)
+				->isEqualTo(8)
+		;
+		$this
+			->array($artist->albums)
+				->hasSize(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING COUNT(`alb`.`AlbumId`) > 2")
 		;
 	}
 
@@ -1954,7 +2323,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) AND (COUNT(alb.AlbumId) > 3)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -1985,7 +2354,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) AND (COUNT(alb.AlbumId) > 3)")
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2023,7 +2392,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) AND (COUNT(alb.AlbumId) > 4)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 4)")
 		;
 	}
 
@@ -2056,7 +2425,43 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) AND (COUNT(alb.AlbumId) > 4)")
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 4)")
+		;
+	}
+
+	public function testAndHavingRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.id')
+			->having('COUNT(alb.id) > 2')
+			->andHaving('COUNT(alb.id) > 3')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->array($artists)
+				->hasSize(12)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->integer($artist->id)
+				->isEqualTo(21)
+		;
+		$this
+			->array($artist->albums)
+				->hasSize(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2094,7 +2499,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 3)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2125,7 +2530,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 3)")
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2163,7 +2568,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 4)")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 4)")
 		;
 	}
 
@@ -2196,7 +2601,43 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId GROUP BY art.ArtistId HAVING (COUNT(alb.AlbumId) > 2) OR (COUNT(alb.AlbumId) > 4)")
+				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 4)")
+		;
+	}
+
+	public function testOrHavingRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art', 'alb')
+			->join('art', 'alb', 'albums')
+			->groupBy('art.id')
+			->having('COUNT(alb.id) > 2')
+			->orHaving('COUNT(alb.id) > 3')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->array($artists)
+				->hasSize(26)
+		;
+		$this
+			->object($artist)
+				->isInstanceOf('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity')
+		;
+		$this
+			->integer($artist->id)
+				->isEqualTo(8)
+		;
+		$this
+			->array($artist->albums)
+				->hasSize(1)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2239,7 +2680,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.ArtistId IN (155) ORDER BY art.Name DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (155) ORDER BY art.Name DESC")
 		;
 	}
 
@@ -2260,7 +2701,48 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE art.ArtistId IN (275) ORDER BY art.ArtistId DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (275) ORDER BY art.ArtistId DESC")
+		;
+	}
+
+	public function testOrderAllRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->order('art.name', 'DESC')
+		;
+		$artists = $query->all();
+		$artist  = reset($artists);
+
+		$this
+			->integer($artist->id)
+				->isEqualTo(155)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art ORDER BY `art`.`Name` DESC")
+		;
+	}
+
+	public function testOrderFirstRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->select('art')
+			->order('art.name', 'DESC')
+		;
+		$artist = $query->first();
+
+		$this
+			->integer($artist->id)
+				->isEqualTo(155)
+		;
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (155) ORDER BY `art`.`Name` DESC")
 		;
 	}
 
@@ -2291,7 +2773,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE art.ArtistId = 90 ORDER BY art.Name DESC, alb.Title DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE `art`.`ArtistId` = 90 ORDER BY art.Name DESC, alb.Title DESC")
 		;
 	}
 
@@ -2319,7 +2801,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId = 90) AND (art.ArtistId IN (90)) ORDER BY art.Name DESC, alb.Title DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 90) AND (`art`.`ArtistId` IN (90)) ORDER BY art.Name DESC, alb.Title DESC")
 		;
 	}
 
@@ -2349,7 +2831,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.ArtistId = `alb`.ArtistId WHERE (art.ArtistId = 90) AND (art.ArtistId IN (90)) ORDER BY art.Name ASC, alb.Title ASC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 90) AND (`art`.`ArtistId` IN (90)) ORDER BY art.Name ASC, alb.Title ASC")
 		;
 	}
 
@@ -2485,7 +2967,7 @@ class AbstractComposer extends atoum
 		$config = new \Monolith\Casterlith\Configuration();
 		$config->setFirstAutoSelection(false);
 		$config->setExceptionMultipleResultOnFirst(false);
-		
+
 		$orm = getAReadOnlyOrmInstance("unit-tests", $config);
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
 		$query = $composer
@@ -2510,7 +2992,7 @@ class AbstractComposer extends atoum
 		$config = new \Monolith\Casterlith\Configuration();
 		$config->setFirstAutoSelection(false);
 		$config->setExceptionMultipleResultOnFirst(true);
-		
+
 		$orm = getAReadOnlyOrmInstance("unit-tests", $config);
 		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistComposer');
 		$query = $composer
@@ -2556,27 +3038,15 @@ class ArtistMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements
 {
 	protected static $table      = 'artists';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'ArtistId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Name'      => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'ArtistId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'ArtistId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Name'      => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()
@@ -2596,28 +3066,16 @@ class AlbumMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements 
 {
 	protected static $table      = 'albums';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Title'     => array('type' => 'string'),
+		'ArtistId'  => array('type' => 'integer'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'AlbumId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Title'     => array('type' => 'string'),
-				'ArtistId'  => array('type' => 'integer'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()
@@ -2636,7 +3094,17 @@ class InvoiceMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implement
 {
 	protected static $table      = 'invoices';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\InvoiceEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'InvoiceId'          => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'CustomerId'         => array('type' => 'integer'),
+		'InvoiceDate'        => array('type' => 'datetime'),
+		'BillingAddress'     => array('type' => 'string'),
+		'BillingCity'        => array('type' => 'string'),
+		'BillingState'       => array('type' => 'string'),
+		'BillingCountry'     => array('type' => 'string'),
+		'BillingPostalCode'  => array('type' => 'string'),
+		'Total'              => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
@@ -2644,33 +3112,10 @@ class InvoiceMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implement
 		return 'InvoiceId';
 	}
 
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'InvoiceId'          => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'CustomerId'         => array('type' => 'integer'),
-				'InvoiceDate'        => array('type' => 'datetime'),
-				'BillingAddress'     => array('type' => 'string'),
-				'BillingCity'        => array('type' => 'string'),
-				'BillingState'       => array('type' => 'string'),
-				'BillingCountry'     => array('type' => 'string'),
-				'BillingPostalCode'  => array('type' => 'string'),
-				'Total'              => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
-	}
-
 	public static function getRelations()
 	{
 		if (is_null(self::$relations)) {
-			self::$relations = array(
-			);
+			self::$relations = array();
 		}
 
 		return self::$relations;
@@ -2681,40 +3126,28 @@ class EmployeeMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implemen
 {
 	protected static $table      = 'employees';
 	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\EmployeeEntity';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'EmployeeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'FirstName'   => array('type' => 'string'),
+		'LastName'    => array('type' => 'string'),
+		'Title'       => array('type' => 'string'),
+		'ReportsTo'   => array('type' => 'string'),
+		'BirthDate'   => array('type' => 'string'),
+		'HireDate'    => array('type' => 'string'),
+		'Address'     => array('type' => 'string'),
+		'City'        => array('type' => 'string'),
+		'State'       => array('type' => 'string'),
+		'Country'     => array('type' => 'string'),
+		'PostalCode'  => array('type' => 'string'),
+		'Phone'       => array('type' => 'string'),
+		'Fax'         => array('type' => 'string'),
+		'Email'       => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'EmployeeId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'EmployeeId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'FirstName'   => array('type' => 'string'),
-				'LastName'    => array('type' => 'string'),
-				'Title'       => array('type' => 'string'),
-				'ReportsTo'   => array('type' => 'string'),
-				'BirthDate'   => array('type' => 'string'),
-				'HireDate'    => array('type' => 'string'),
-				'Address'     => array('type' => 'string'),
-				'City'        => array('type' => 'string'),
-				'State'       => array('type' => 'string'),
-				'Country'     => array('type' => 'string'),
-				'PostalCode'  => array('type' => 'string'),
-				'Phone'       => array('type' => 'string'),
-				'Fax'         => array('type' => 'string'),
-				'Email'       => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()
@@ -2783,6 +3216,93 @@ class EmployeeEntity implements \Monolith\Casterlith\Entity\EntityInterface
 	public $customers     = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $reportsTo     = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 	public $isReportedBy  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+}
+
+//	Valid with renamed fields
+
+class ArtistRenamedComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
+{
+	protected static $mapperName  = '\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedMapper';
+}
+
+class AlbumRenamedComposer extends \Monolith\Casterlith\Composer\AbstractComposer implements \Monolith\Casterlith\Composer\ComposerInterface
+{
+	protected static $mapperName  = '\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumRenamedMapper';
+}
+
+class ArtistRenamedMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \Monolith\Casterlith\Mapper\MapperInterface
+{
+	protected static $table      = 'artists';
+	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedEntity';
+	protected static $fields     = array(
+		'id'    => array('name' => 'ArtistId', 'type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'name'  => array('name' => 'Name',     'type' => 'string'),
+	);
+	protected static $relations  = null;
+
+	public static function getPrimaryKey()
+	{
+		return 'id';
+	}
+
+	public static function getRelations()
+	{
+		if (is_null(self::$relations)) {
+			self::$relations = array(
+				'albums'            => new \Monolith\Casterlith\Relations\OneToMany(new \Monolith\Casterlith\tests\units\Composer\AlbumRenamedMapper(), 'artist', 'album', '`artist`.id = `album`.artistId', 'artist'),
+				'albumsNoRecursion' => new \Monolith\Casterlith\Relations\OneToMany(new \Monolith\Casterlith\tests\units\Composer\AlbumRenamedMapper(), 'artist', 'album', '`artist`.id = `album`.artistId'),
+			);
+		}
+
+		return self::$relations;
+	}
+}
+
+class AlbumRenamedMapper extends \Monolith\Casterlith\Mapper\AbstractMapper implements \Monolith\Casterlith\Mapper\MapperInterface
+{
+	protected static $table      = 'albums';
+	protected static $entity     = '\\Monolith\\Casterlith\\tests\\units\\Composer\\AlbumRenamedEntity';
+	protected static $fields     = array(
+		'id'        => array('name' => 'AlbumId',  'type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'title'     => array('name' => 'Title',    'type' => 'string'),
+		'artistId'  => array('name' => 'ArtistId', 'type' => 'integer'),
+	);
+	protected static $relations  = null;
+
+	public static function getPrimaryKey()
+	{
+		return 'id';
+	}
+
+	public static function getRelations()
+	{
+		if (is_null(self::$relations)) {
+			self::$relations = array(
+				'artist' => new \Monolith\Casterlith\Relations\ManyToOne(new \Monolith\Casterlith\tests\units\Composer\ArtistRenamedMapper(), 'album', 'artist', '`album`.artistId = `artist`.id', 'albums'),
+			);
+		}
+
+		return self::$relations;
+	}
+}
+
+class ArtistRenamedEntity implements \Monolith\Casterlith\Entity\EntityInterface
+{
+	public $id    = null;
+	public $name  = null;
+
+	public $albums             = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+	public $albumsNoRecursion  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+}
+
+class AlbumRenamedEntity implements \Monolith\Casterlith\Entity\EntityInterface
+{
+	public $id        = null;
+	public $title     = null;
+	public $artistId  = null;
+
+	public $tracks  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
+	public $artist  = \Monolith\Casterlith\Casterlith::NOT_LOADED;
 }
 
 //	Invalid

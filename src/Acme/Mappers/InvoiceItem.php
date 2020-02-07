@@ -15,30 +15,18 @@ class InvoiceItem extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'invoice_items';
 	protected static $entity     = 'Acme\Entities\InvoiceItem';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'InvoiceItemId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'InvoiceId'      => array('type' => 'integer'),
+		'TrackId'        => array('type' => 'integer'),
+		'UnitPrice'      => array('type' => 'decimal'),
+		'Quantity'       => array('type' => 'integer'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'InvoiceItemId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'InvoiceItemId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'InvoiceId'      => array('type' => 'integer'),
-				'TrackId'        => array('type' => 'integer'),
-				'UnitPrice'      => array('type' => 'decimal'),
-				'Quantity'       => array('type' => 'integer'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

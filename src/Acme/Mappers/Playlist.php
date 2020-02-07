@@ -14,27 +14,15 @@ class Playlist extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'playlists';
 	protected static $entity     = 'Acme\Entities\Playlist';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'PlaylistId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Name'        => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'PlaylistId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'PlaylistId'  => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'Name'        => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()

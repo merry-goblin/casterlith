@@ -15,34 +15,22 @@ class Invoice extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'invoices';
 	protected static $entity     = 'Acme\Entities\Invoice';
-	protected static $fields     = null;
+	protected static $fields     = array(
+		'InvoiceId'          => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'CustomerId'         => array('type' => 'integer'),
+		'InvoiceDate'        => array('type' => 'datetime'),
+		'BillingAddress'     => array('type' => 'string'),
+		'BillingCity'        => array('type' => 'string'),
+		'BillingState'       => array('type' => 'string'),
+		'BillingCountry'     => array('type' => 'string'),
+		'BillingPostalCode'  => array('type' => 'string'),
+		'Total'              => array('type' => 'string'),
+	);
 	protected static $relations  = null;
 
 	public static function getPrimaryKey()
 	{
 		return 'InvoiceId';
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getFields()
-	{
-		if (is_null(self::$fields)) {
-			self::$fields = array(
-				'InvoiceId'          => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-				'CustomerId'         => array('type' => 'integer'),
-				'InvoiceDate'        => array('type' => 'datetime'),
-				'BillingAddress'     => array('type' => 'string'),
-				'BillingCity'        => array('type' => 'string'),
-				'BillingState'       => array('type' => 'string'),
-				'BillingCountry'     => array('type' => 'string'),
-				'BillingPostalCode'  => array('type' => 'string'),
-				'Total'              => array('type' => 'string'),
-			);
-		}
-
-		return self::$fields;
 	}
 
 	public static function getRelations()
