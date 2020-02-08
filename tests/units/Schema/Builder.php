@@ -813,7 +813,7 @@ class Builder extends atoum
 
 		$this
 			->string($selection = $schemaBuilder->getAUniqueSelectionFromRaw("count(artist.ArtistId) as nb"))
-				->isEqualTo("count(artist.ArtistId) as nb")
+				->isEqualTo("count(`artist`.`ArtistId`) as nb")
 		;
 	}
 

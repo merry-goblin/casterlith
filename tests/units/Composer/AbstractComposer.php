@@ -378,7 +378,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb FROM artists art")
 		;
 	}
 
@@ -393,7 +393,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2 FROM artists art")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb, count(distinct(`art`.`ArtistId`)) as nb2 FROM artists art")
 		;
 	}
 
@@ -408,7 +408,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2 FROM artists art")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb, count(distinct(`art`.`ArtistId`)) as nb2 FROM artists art")
 		;
 	}
 
@@ -426,7 +426,87 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
+		;
+	}
+
+	public function testSelectAsRawWithOnlyOneRenamedEntityAlias()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->selectAsRaw('art')
+		;
+
+		$this
+			->exception(
+				function() use($query) {
+					$query->first();
+				}
+			)
+		;
+	}
+
+	public function testSelectAsRawWithOneRenamedEntityAliasAndACounter()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.id)) as nb')
+		;
+		$query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb FROM artists art")
+		;
+	}
+
+	public function testSelectAsRawWithOneRenamedEntityAliasAndTwoSelectors()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.id)) as nb', 'count(distinct(art.id)) as nb2')
+		;
+		$query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb, count(distinct(`art`.`ArtistId`)) as nb2 FROM artists art")
+		;
+	}
+
+	public function testSelectAsRawWithOneRenamedEntityAliasAndOneSelectorOfTwoCounters()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.id)) as nb, count(distinct(art.id)) as nb2')
+		;
+		$query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb, count(distinct(`art`.`ArtistId`)) as nb2 FROM artists art")
+		;
+	}
+
+	public function testSelectAsRawWithResetOfSelectionRenamed()
+	{
+		$orm = getAReadOnlyOrmInstance();
+		$composer = $orm->getComposer('\\Monolith\\Casterlith\\tests\\units\\Composer\\ArtistRenamedComposer');
+		$query = $composer
+			->selectAsRaw('art', 'count(distinct(art.id)) as nb')
+			->join('art', 'alb', 'albums')
+			->selectAsRaw('art', 'count(distinct(art.id)) as nb')
+			->join('art', 'alb', 'albums')
+		;
+		$query->first();
+
+		$this
+			->string($query->getSQL())
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
 		;
 	}
 
@@ -444,7 +524,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb FROM artists art")
 		;
 	}
 
@@ -460,7 +540,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2 FROM artists art")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb, count(distinct(`art`.`ArtistId`)) as nb2 FROM artists art")
 		;
 	}
 
@@ -476,7 +556,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb, count(distinct(art.ArtistId)) as nb2 FROM artists art")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb, count(distinct(`art`.`ArtistId`)) as nb2 FROM artists art")
 		;
 	}
 
@@ -496,7 +576,7 @@ class AbstractComposer extends atoum
 
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT count(distinct(art.ArtistId)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
+				->isEqualTo("SELECT count(distinct(`art`.`ArtistId`)) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId`")
 		;
 	}
 
@@ -1916,7 +1996,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY `alb`.`ArtistId`")
+				->isEqualTo("SELECT `alb`.`ArtistId`, count(`alb`.`ArtistId`) as nb FROM albums alb GROUP BY `alb`.`ArtistId`")
 		;
 	}
 
@@ -1980,7 +2060,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb GROUP BY `alb`.`AlbumId`")
+				->isEqualTo("SELECT `alb`.`ArtistId`, count(`alb`.`ArtistId`) as nb FROM albums alb GROUP BY `alb`.`AlbumId`")
 		;
 	}
 
@@ -2081,7 +2161,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`, `art`.`ArtistId`")
+				->isEqualTo("SELECT `alb`.`ArtistId`, count(`alb`.`ArtistId`) as nb FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`ArtistId`, `art`.`ArtistId`")
 		;
 	}
 
@@ -2148,7 +2228,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, count(alb.ArtistId) as nb FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`AlbumId`")
+				->isEqualTo("SELECT `alb`.`ArtistId`, count(`alb`.`ArtistId`) as nb FROM albums alb INNER JOIN artists art ON `alb`.`ArtistId` = `art`.`ArtistId` GROUP BY `alb`.`AlbumId`")
 		;
 	}
 
@@ -2250,7 +2330,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING COUNT(`alb`.`AlbumId`) > 2")
+				->isEqualTo("SELECT `alb`.`ArtistId`, COUNT(`alb`.`AlbumId`) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING COUNT(`alb`.`AlbumId`) > 2")
 		;
 	}
 
@@ -2354,7 +2434,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 3)")
+				->isEqualTo("SELECT `alb`.`ArtistId`, COUNT(`alb`.`AlbumId`) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2425,7 +2505,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 4)")
+				->isEqualTo("SELECT `alb`.`ArtistId`, COUNT(`alb`.`AlbumId`) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) AND (COUNT(`alb`.`AlbumId`) > 4)")
 		;
 	}
 
@@ -2530,7 +2610,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 3)")
+				->isEqualTo("SELECT `alb`.`ArtistId`, COUNT(`alb`.`AlbumId`) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 3)")
 		;
 	}
 
@@ -2601,7 +2681,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT alb.ArtistId, COUNT(alb.AlbumId) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 4)")
+				->isEqualTo("SELECT `alb`.`ArtistId`, COUNT(`alb`.`AlbumId`) as nb FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` GROUP BY `art`.`ArtistId` HAVING (COUNT(`alb`.`AlbumId`) > 2) OR (COUNT(`alb`.`AlbumId`) > 4)")
 		;
 	}
 
@@ -2660,7 +2740,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art ORDER BY art.Name DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art ORDER BY `art`.`Name` DESC")
 		;
 	}
 
@@ -2680,7 +2760,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (155) ORDER BY art.Name DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (155) ORDER BY `art`.`Name` DESC")
 		;
 	}
 
@@ -2701,7 +2781,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (275) ORDER BY art.ArtistId DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name FROM artists art WHERE `art`.`ArtistId` IN (275) ORDER BY `art`.`ArtistId` DESC")
 		;
 	}
 
@@ -2773,7 +2853,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE `art`.`ArtistId` = 90 ORDER BY art.Name DESC, alb.Title DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE `art`.`ArtistId` = 90 ORDER BY `art`.`Name` DESC, `alb`.`Title` DESC")
 		;
 	}
 
@@ -2801,7 +2881,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 90) AND (`art`.`ArtistId` IN (90)) ORDER BY art.Name DESC, alb.Title DESC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 90) AND (`art`.`ArtistId` IN (90)) ORDER BY `art`.`Name` DESC, `alb`.`Title` DESC")
 		;
 	}
 
@@ -2831,7 +2911,7 @@ class AbstractComposer extends atoum
 		;
 		$this
 			->string($query->getSQL())
-				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 90) AND (`art`.`ArtistId` IN (90)) ORDER BY art.Name ASC, alb.Title ASC")
+				->isEqualTo("SELECT art.ArtistId as artcl1_ArtistId,art.Name as artcl1_Name, alb.AlbumId as albcl2_AlbumId,alb.Title as albcl2_Title,alb.ArtistId as albcl2_ArtistId FROM artists art INNER JOIN albums alb ON `art`.`ArtistId` = `alb`.`ArtistId` WHERE (`art`.`ArtistId` = 90) AND (`art`.`ArtistId` IN (90)) ORDER BY `art`.`Name` ASC, `alb`.`Title` ASC")
 		;
 	}
 
