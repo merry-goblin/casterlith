@@ -16,6 +16,7 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 - Can map your entire database into one single array
 - Relations can go in both ways
 - Compatible PHP >= 5.3 
+- Possible to have properties of entities != fields of tables
 
 ### Supported databases
 
@@ -133,9 +134,9 @@ class Album extends AbstractMapper implements MapperInterface
 	protected static $table      = 'albums';
 	protected static $entity     = 'Acme\Entities\Album';
 	protected static $fields     = array(
-		'AlbumId'   => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-		'Title'     => array('type' => 'string'),
-		'ArtistId'  => array('type' => 'integer'),
+		'AlbumId'   => array('name' => 'AlbumId',  'type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'Title'     => array('name' => 'Title',    'type' => 'string'),
+		'ArtistId'  => array('name' => 'ArtistId', 'type' => 'integer'),
 	);
 	protected static $relations  = null;
 
