@@ -11,23 +11,30 @@ $params = array(
 $config = new \Monolith\Casterlith\Configuration();
 $config->setSelectionReplacer("_cl"); // The replacer insures that table's aliases won't be equal to real database's table names
 
-$orm  = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
-$dbal = $orm->getDBALConnection();
+$orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
+$albumComposer  = $orm->getComposer('Acme\Composers\Album');              // Each table has its own query composer
 
-$sql = "
-	UPDATE albums
-	SET   Title   = :title
-	WHERE AlbumId = :id
-";
-$values = array(
-	'id'    => 3,
-	'title' => "Restless and Wild (updated ".time().")",
+$album = $albumComposer
+	->select("t")
+	->where("t.AlbumId = :id")
+	->setParameter('id', 3)
+	->first()
+;
+
+$album->Title = "Restless and Wild (updated ".time().")";
+$fieldsToUpdate = array(
+	'Title',
 );
 
-$numberOfUpdatedRows = $dbal->executeUpdate($sql, $values);
-if ($numberOfUpdatedRows === false) {
-	echo "An error occured";
+$query = $albumComposer
+	->update($album, $fieldsToUpdate)
+	->where("AlbumId = :id")
+	->setParameter("id", 3)
+;
+
+if ($query->execute()) {
+	echo "Update is successful";
 }
 else {
-	echo "Update successful";
+	echo "An error occured";
 }

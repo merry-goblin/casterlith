@@ -12,7 +12,7 @@ $config = new \Monolith\Casterlith\Configuration();
 $config->setSelectionReplacer("_cl"); // The replacer insures that table's aliases won't be equal to real database's table names
 
 $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
-$trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own composer
+$trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own query composer
 
 $tracks = $trackComposer
 	->select("t", "alb", "it", "g", "m", "pt", "p", "art", "inv", "c", "sub", "sup")
