@@ -25,13 +25,11 @@ $track->Milliseconds  = 343719;
 $track->Bytes         = 11170334;
 $track->UnitPrice     = 0.99;
 
-$query = $trackComposer
-	->insert($track)
-;
-
-if ($query->execute()) {
+if ($trackComposer->insert($track)) {
 	echo "Insert is successful";
 }
 else {
 	echo "An error occured";
 }
+
+var_dump($track);

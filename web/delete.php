@@ -14,16 +14,19 @@ $config->setSelectionReplacer("_cl"); // The replacer insures that table's alias
 $orm            = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
 $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Each table has its own query composer
 
+//	Selection of the last inserted track
 $track = $trackComposer
 	->select("t")
 	->order("t.TrackId", "desc")
 	->first()
 ;
 
+//	Removal of this track
 $query = $trackComposer
 	->delete($track)
 ;
 
+//	Execute is separate of the update method to allow you to custom your query
 if ($query->execute()) {
 	echo "Delete is successful";
 }
