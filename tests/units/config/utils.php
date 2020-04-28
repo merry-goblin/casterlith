@@ -2,7 +2,7 @@
 
 function cleanSqlLiteDB()
 {
-	$fileName = __DIR__ . "/sqlite-unit-tests-writable.db";
+	$fileName = __DIR__."/sqlite-unit-tests-writable.db";
 	if (file_exists($fileName)) {
 		unlink($fileName);
 	}

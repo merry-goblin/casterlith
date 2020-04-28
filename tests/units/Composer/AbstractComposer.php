@@ -4,7 +4,7 @@ namespace Monolith\Casterlith\tests\units\Composer;
 
 require_once(__DIR__."/../../../vendor/autoload.php");
 require_once(__DIR__."/../config/utils.php");
-require_once(__DIR__ ."/../../../vendor/merry-goblin/casterlith/Monolith/Casterlith/Composer/AbstractComposer.php");
+require_once(__DIR__."/../../../vendor/merry-goblin/casterlith/Monolith/Casterlith/Composer/AbstractComposer.php");
 
 use atoum;
 
