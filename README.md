@@ -34,14 +34,14 @@ The main purpose of Casterlith is to cast your database, or a part of it, into a
 
 or
 
-- git clone merry-goblin/casterlith-composer
+- git clone https://github.com/merry-goblin/casterlith-composer
 
 No sample files will be included. 
 See the paragraph below to test Casterlith.
 
 ### Install a standalone sample of Casterlith ready to be used
 
-- git clone merry-goblin/casterlith
+- git clone https://github.com/merry-goblin/casterlith
 - composer install
 
 Sample's entry point is "web/index.php".
