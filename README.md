@@ -161,45 +161,74 @@ class Album extends AbstractMapper implements MapperInterface
 
 ### INSERT, UPDATE, DELETE
 
-[DBAL](https://github.com/doctrine/dbal) will do the job just fine
-
+**web/insert.php :**
 ```
-<?php
+$artist = new \Acme\Entities\Artist();
+$artist->ArtistId  = null;
+$artist->Name      = "My favorite artist";
 
-require_once(__DIR__."/../vendor/autoload.php");
-
-//	Parameters to connect on SQLite database
-$params = array(
-	'driver'    => 'pdo_sqlite',
-	'path'      => __DIR__."/../config/chinook.db",
-	'memory'    => false,
-);
-$config = new \Monolith\Casterlith\Configuration();
-$config->setSelectionReplacer("_cl"); // The replacer insures that table's aliases won't be equal to real database's table names
-
-$orm  = new \Monolith\Casterlith\Casterlith($params, $config);  // Casterlith helps to create new instances of composers
-$dbal = $orm->getDBALConnection();
-
-$sql = "
-	UPDATE albums
-	SET   Title   = :title
-	WHERE AlbumId = :id
-";
-$values = array(
-	'id'    => 3,
-	'title' => "Restless and Wild (updated ".time().")",
-);
-
-$numberOfUpdatedRows = $dbal->executeUpdate($sql, $values);
-if ($numberOfUpdatedRows === false) {
-	echo "An error occured";
+if ($artistComposer->insert($artist)) {
+	echo "Insert is successful";
 }
 else {
-	echo "Update successful";
+	echo "An error occured";
 }
 
+echo "Artist id : ".$artist->ArtistId;
 ```
-More informations on ["Data Retrieval And Manipulation" here](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/data-retrieval-and-manipulation.html#data-retrieval-and-manipulation).
+
+**web/update.php :**
+```
+//	Selection of an album
+$album = $albumComposer
+	->select("t")
+	->where("t.AlbumId = :id")
+	->setParameter('id', 3)
+	->first()
+;
+
+//	Modification of this album
+$album->Title = "Restless and Wild (updated ".time().")";
+
+//	Update of database
+$fieldsToUpdate = array(
+	'Title',
+);
+$query = $albumComposer
+	->update($album, $fieldsToUpdate)
+;
+
+//	Execute is separate of the update method to allow you to custom your query
+if ($query->execute()) {
+	echo "Update is successful";
+}
+else {
+	echo "An error occured";
+}
+```
+
+**web/delete.php :**
+```
+//	Selection of the last inserted track
+$track = $trackComposer
+	->select("t")
+	->order("t.TrackId", "desc")
+	->first()
+;
+
+//	Removal of this track
+$query = $trackComposer
+	->delete($track)
+;
+
+//	Execute is separate of the update method to allow you to custom your query
+if ($query->execute()) {
+	echo "Delete is successful";
+}
+else {
+	echo "An error occured";
+}
+```
 
 ### Available methods
 
@@ -238,12 +267,19 @@ More informations on ["Data Retrieval And Manipulation" here](https://www.doctri
 	- **all() :**              returns an array of entities
 	- **limit(first, max) :**  returns an array of entities. be carefull! It's not a sql limit at all. It limits selection of the composer's entity in the specified range and will load any related associations according to the conditions request. to use only if needed because a second sql request is sent. 
 
+- **Modifications** Entities to create, modify or delete
+	- **insert() :**   
+	- **update() :**   
+	- **delete() :**   
+	- **execute() :**  
+
 - **Build a request**
 	- **getDBALQueryBuilder() :**  returns the composer's DBAL query builder. Usefull to apply expressions in conditions
 	- **getDBALConnection() :**    returns the composer's DBAL connection. Usefull to use raw sql queries.
 	- **getPDOConnection() :**     returns a PDO connection wrapped by the composer's DBAL connection. Usefull to use raw sql queries without DBAL wrapping.
 	- **getSQL() :**               returns a sql version of the current composition.
 	- **expr() :**                 returns an expression builder.
+	- **getMapper() :**            returns the entity mapper of the current query composer
 
 ### Joints
 
@@ -283,6 +319,10 @@ To map those entities and connect them :
 Unit tests are made with [atoum](http://atoum.org/)
 
 ./vendor/bin/atoum -d tests/units
+
+For a specific method in a specific file:
+
+./vendor/bin/atoum -f "tests\\units\\Composer\\AbstractComposer.php" -m "*::testGroupByWithRawSelection"
 
 --------------------------
 

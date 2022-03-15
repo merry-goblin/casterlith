@@ -16,7 +16,7 @@ $trackComposer  = $orm->getComposer('Acme\Composers\Track');              // Eac
 
 $tracks = $trackComposer
 	->selectAsRaw("t", "count(t.TrackId) as nb")
-	->first();
+	->all();
 
 // To see the entire dump you can uncomment the 3 lines below
 /*ini_set('xdebug.var_display_max_depth', '20');

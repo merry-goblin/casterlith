@@ -618,7 +618,7 @@ class AbstractComposer extends atoum
 		$artists = $query->all();
 		$artist = $artists[227];
 
-		$artist->albumsNoRecursion[293];
+		//$artist->albumsNoRecursion[293]; // What the **** is this line of code
 
 		$this
 			->array($artists)
@@ -898,7 +898,7 @@ class AbstractComposer extends atoum
 		$artists = $query->all();
 		$artist = $artists[227];
 
-		$artist->albumsNoRecursion[293];
+		//	$artist->albumsNoRecursion[293];
 
 		$this
 			->array($artists)
@@ -1120,7 +1120,7 @@ class AbstractComposer extends atoum
 		$artists = $query->all();
 		$artist = $artists[227];
 
-		$artist->albumsNoRecursion[293];
+		//$artist->albumsNoRecursion[293];
 
 		$this
 			->array($artists)
@@ -1982,16 +1982,18 @@ class AbstractComposer extends atoum
 		;
 		$result = $query->first();
 
+		//var_dump($result);
+
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo(1)
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo(2)
 		;
 		$this
@@ -2047,15 +2049,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo(1)
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo(1)
 		;
 		$this
@@ -2148,15 +2150,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo(1)
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo(2)
 		;
 		$this
@@ -2215,15 +2217,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo(1)
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo(1)
 		;
 		$this
@@ -2317,15 +2319,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo(8)
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo(3)
 		;
 		$this
@@ -2421,15 +2423,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo("21")
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo("4")
 		;
 		$this
@@ -2492,15 +2494,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo("22")
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo("14")
 		;
 		$this
@@ -2597,15 +2599,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo(8)
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo(3)
 		;
 		$this
@@ -2668,15 +2670,15 @@ class AbstractComposer extends atoum
 		$result = $query->first();
 
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->string($result->ArtistId)
+			->string($result['ArtistId'])
 				->isEqualTo("8")
 		;
 		$this
-			->string($result->nb)
+			->string($result['nb'])
 				->isEqualTo("3")
 		;
 		$this
