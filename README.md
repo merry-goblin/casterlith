@@ -320,6 +320,10 @@ Unit tests are made with [atoum](http://atoum.org/)
 
 ./vendor/bin/atoum -d tests/units
 
+For a specific method in a specific file:
+
+./vendor/bin/atoum -f "tests\\units\\Composer\\AbstractComposer.php" -m "*::testGroupByWithRawSelection"
+
 --------------------------
 
 author : [alexandre keller](https://github.com/merry-goblin)

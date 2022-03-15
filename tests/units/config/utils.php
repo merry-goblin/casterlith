@@ -28,7 +28,7 @@ function getAReadOnlyOrmInstance($name = "unit-tests", \Monolith\Casterlith\Conf
 		'memory'  => false,
 	);
 	if (is_null($config)) {
-		$config = new \Monolith\Casterlith\Configuration($replacer);
+		$config = new \Monolith\Casterlith\Configuration();
 	}
 
 	$casterlith = new \Monolith\Casterlith\Casterlith($params, $config);

@@ -1654,11 +1654,11 @@ class Builder extends atoum
 
 		$result = $schemaBuilder->buildFirstAsRaw($statement);
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(1)
 		;
 		$this
-			->variable($result->nb)
+			->variable($result['nb'])
 				->isIdenticalTo("275")
 		;
 	}
@@ -1686,11 +1686,11 @@ class Builder extends atoum
 
 		$result = $schemaBuilder->buildFirstAsRaw($statement);
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(1)
 		;
 		$this
-			->variable($result->nb)
+			->variable($result['nb'])
 				->isIdenticalTo("204")
 		;
 	}
@@ -1717,15 +1717,15 @@ class Builder extends atoum
 
 		$result = $schemaBuilder->buildFirstAsRaw($statement);
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->variable($result->nb1)
+			->variable($result['nb1'])
 				->isIdenticalTo("275")
 		;
 		$this
-			->variable($result->nb2)
+			->variable($result['nb2'])
 				->isIdenticalTo("275")
 		;
 	}
@@ -1750,15 +1750,15 @@ class Builder extends atoum
 
 		$result = $schemaBuilder->buildFirstAsRaw($statement);
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->variable($result->nb1)
+			->variable($result['nb1'])
 				->isIdenticalTo("204")
 		;
 		$this
-			->variable($result->nb2)
+			->variable($result['nb2'])
 				->isIdenticalTo("347")
 		;
 	}
@@ -1790,11 +1790,11 @@ class Builder extends atoum
 				->hasSize(1)
 		;
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(1)
 		;
 		$this
-			->variable($result->nb)
+			->variable($result['nb'])
 				->isIdenticalTo("275")
 		;
 	}
@@ -1827,11 +1827,11 @@ class Builder extends atoum
 				->hasSize(1)
 		;
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(1)
 		;
 		$this
-			->variable($result->nb)
+			->variable($result['nb'])
 				->isIdenticalTo("204")
 		;
 	}
@@ -1863,15 +1863,15 @@ class Builder extends atoum
 				->hasSize(1)
 		;
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->variable($result->nb1)
+			->variable($result['nb1'])
 				->isIdenticalTo("275")
 		;
 		$this
-			->variable($result->nb2)
+			->variable($result['nb2'])
 				->isIdenticalTo("275")
 		;
 	}
@@ -1901,15 +1901,15 @@ class Builder extends atoum
 				->hasSize(1)
 		;
 		$this
-			->object($result)
-				->isInstanceOf('\\stdClass')
+			->array($result)
+				->hasSize(2)
 		;
 		$this
-			->variable($result->nb1)
+			->variable($result['nb1'])
 				->isIdenticalTo("204")
 		;
 		$this
-			->variable($result->nb2)
+			->variable($result['nb2'])
 				->isIdenticalTo("347")
 		;
 	}

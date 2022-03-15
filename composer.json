@@ -1,7 +1,12 @@
 {
+	"config": {
+        "platform": {
+            "php": "7.1.33"
+        }
+    },
     "require": {
         "merry-goblin/casterlith": "dev-master",
-        "atoum/atoum": "dev-master"
+        "atoum/atoum": "3.4.2"
     },
     "autoload": {
         "psr-4": {
